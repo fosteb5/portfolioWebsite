@@ -40,15 +40,12 @@ npm run preview
 
 `npm run check` looks for type errors.
 
-## Deploy for free on Cloudflare Pages
+## Deployment
 
-The site is fully static, so it needs no server and no paid plan.
+The site runs for free on Cloudflare Workers at https://foster-beard.foster5beard.workers.dev. It is fully static, so it needs no server and no paid plan.
 
-1. Push this repository to GitHub. Cloudflare can only offer a branch that already exists.
-2. In the [Cloudflare dashboard](https://dash.cloudflare.com), open **Workers & Pages**, then select **Create application > Pages > Connect to Git** and choose this repository.
-3. Set the project name to `foster-beard`, the production branch to `main`, and the framework preset to **Astro**. Check that the build command is `npm run build` and the output directory is `dist`.
-4. Select **Save and Deploy**. From then on, every push to `main` publishes the site.
+Every push to `main` builds and publishes the site automatically. Build status appears next to each commit on GitHub, and deployment settings are in `wrangler.jsonc`.
 
-The site expects to live at `https://foster-beard.pages.dev`. If Cloudflare gives you a different address, or you add a custom domain, update `PRODUCTION_URL` in `astro.config.mjs` and push. Search results and link previews read that address.
+To use a custom domain, add the domain to Cloudflare first. Then open the `foster-beard` Worker in the [Cloudflare dashboard](https://dash.cloudflare.com), go to **Settings > Domains & Routes**, and select **Add > Custom Domain**. Update `PRODUCTION_URL` in `astro.config.mjs` to match and push. Search results and link previews read that address.
 
 Security and cache headers are in `public/_headers`. Vercel works too, using `vercel.json`, but its free plan is for non-commercial personal use.

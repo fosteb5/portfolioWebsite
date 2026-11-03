@@ -1,0 +1,13 @@
+{
+  // Cloudflare Workers settings. Every push to main builds the site and publishes dist/.
+  "name": "foster-beard",
+  "compatibility_date": "2026-11-02",
+  "build": {
+    "command": "npm run build"
+  },
+  "assets": {
+    "directory": "./dist",
+    // Workers only serves dist/404.html for missing pages when told to.
+    "not_found_handling": "404-page"
+  }
+}

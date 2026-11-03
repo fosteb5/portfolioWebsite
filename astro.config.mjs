@@ -3,8 +3,8 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // The live address, used for search results, the sitemap and link previews.
-// If yours is different, change it here or set SITE_URL in your host's build settings.
-const PRODUCTION_URL = 'https://foster-beard.pages.dev';
+// If the address changes, update it here or set SITE_URL in your host's build settings.
+const PRODUCTION_URL = 'https://foster-beard.foster5beard.workers.dev';
 
 const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
 
