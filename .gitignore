@@ -19,8 +19,8 @@ Thumbs.db
 # Project source files (CAD, Blender scenes, photos, documents) are published under Projects/, except:
 # a clone of github.com/fosteb5/LiftLabs, which is already on GitHub,
 /Projects/SolarBlimp/Code/AeroDonkeys/
-# render frame dumps, which liftlabs-print.blend regenerates (the finished video and stills are kept),
-/Projects/SolarBlimp/Blender/renders/*/
+# render frame dumps, which each project's .blend regenerates (the finished videos and stills are kept),
+/Projects/*/Blender/renders/*/
 *.blend1
 # a packaged Electron build,
 /Projects/testing/dist-electron/

@@ -489,9 +489,39 @@ export const projects: Project[] = [
       ],
       edges: [['remote', 'tx'], ['tx', 'rx'], ['rx', 'step'], ['step', 'knob']],
     },
+    // TODO: add a photo of the handheld remote and its PCB, and footage of the knob turning, when you have them.
     media: [
-      { type: 'image', src: '', alt: 'The motorized volume remote', caption: 'Remote and motor mount', ratio: '16/9' },
-      { type: 'video', src: '', poster: '', alt: 'The knob turning from the remote', caption: 'The knob turning', ratio: '16/9' },
+      {
+        type: 'image',
+        src: 'projects/volume-remote/setup.jpg',
+        alt: 'A stereo receiver on a wooden desk with a black 3D-printed motor mount fitted over its volume knob, and a grey box beside it',
+        caption: 'The motor mount fitted over the receiver’s volume knob',
+        ratio: '16/9',
+      },
+      {
+        type: 'image',
+        src: 'projects/volume-remote/render.jpg',
+        alt: 'Render of the receiver with the black motor mount on its volume knob, wired to a small driver board and a grey box beside it',
+        caption: 'Render of the setup',
+        ratio: '16/9',
+      },
+    ],
+    // Rendered in Blender from Projects/VolumeRemote/Blender/volume-remote.blend. Step timings match its VR_render.py.
+    sequences: [
+      {
+        id: 'design',
+        src: '/sequences/volume-remote/',
+        frames: 90,
+        heading: 'DESIGN',
+        intro: 'The receiver and the motor mount, modelled in Blender from a photo of the real setup. Scroll to watch the stepper turn the volume knob.',
+        alt: 'Render of the receiver with the black motor mount over its volume knob, the display reading -20.0 dB, and wires running to a grey box beside it',
+        note: 'Rendered in Blender from a photo, so sizes are estimates. The receiver is shown without its branding.',
+        steps: [
+          { label: 'Receiver', detail: 'Unmodified', from: 0, to: 0.28 },
+          { label: 'Motor mount', detail: 'Stepper and knob coupler', from: 0.3, to: 0.6 },
+          { label: 'Volume', detail: 'Turned by the stepper', from: 0.6, to: 0.97 },
+        ],
+      },
     ],
   },
   {
