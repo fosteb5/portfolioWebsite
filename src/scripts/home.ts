@@ -1,6 +1,6 @@
 import { drawTrace, gsap, prefersReducedMotion, ScrollTrigger, SplitText, whenIdle } from './motion';
 import { collectNets, routeFan, routeNets } from './net';
-import { getLenis } from './scroll';
+import { initRail } from './rail';
 
 const DESKTOP = '(min-width: 1024px)';
 
@@ -69,6 +69,10 @@ export function initHome(onSettled: () => void) {
 
   ScrollTrigger.addEventListener('refreshInit', relayout);
 
+  /* The projects carousel works with or without motion; it only drops the flourishes when motion is reduced. */
+  const workSection = document.querySelector<HTMLElement>('#work');
+  const stopRail = workSection ? initRail(workSection) : () => undefined;
+
   /* Everything scroll-driven. matchMedia reverts it all when the breakpoint or preference changes. */
   const mm = gsap.matchMedia();
   mm.add({ desktop: DESKTOP, mobile: '(max-width: 1023px)', motion: '(prefers-reduced-motion: no-preference)' }, (context) => {
@@ -84,7 +88,7 @@ export function initHome(onSettled: () => void) {
         gsap.to(hero.querySelector('.board-canvas'), { yPercent: 14, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
         return about(desktop);
       },
-      () => work(desktop),
+      work,
       toolboxSection,
       experience,
       closing,
@@ -128,76 +132,9 @@ export function initHome(onSettled: () => void) {
     return () => split.revert();
   }
 
-  function work(desktop: boolean) {
-    const section = document.querySelector<HTMLElement>('#work');
-    if (!section) return;
-    const view = section.querySelector<HTMLElement>('[data-rail-view]')!;
-    const track = section.querySelector<HTMLElement>('[data-rail-track]')!;
-    const modules = gsap.utils.toArray<HTMLElement>(section.querySelectorAll('[data-module]'));
-    const intro = section.querySelector('.rail-title')!;
-
-    gsap.timeline({ scrollTrigger: { trigger: section, start: 'top 72%', once: true } }).add(drawTrace(intro, 0.9));
-
-    if (!desktop) return;
-
-    view.classList.add('is-pinned');
-
-    /*
-     * The rail steps rather than slides: each card travels in, then holds centred for a stretch of scroll.
-     * Timeline units: a lead-in on the intro, then MOVE + HOLD per card. SCROLL is viewport heights per unit.
-     */
-    const LEAD = 0.3;
-    const MOVE = 1;
-    const HOLD = 0.7;
-    const SCROLL = 0.55;
-    const SHIFT = 26;
-    const units = LEAD + modules.length * (MOVE + HOLD);
-    const centre = (module: HTMLElement) => -(module.offsetLeft + module.offsetWidth / 2 - document.documentElement.clientWidth / 2);
-    const arts = modules.map((module) => module.querySelector('[data-module-art]'));
-
-    const rail = gsap.timeline({
-      defaults: { ease: 'power2.inOut', duration: MOVE },
-      scrollTrigger: {
-        trigger: section,
-        pin: true,
-        start: 'top top',
-        end: () => `+=${units * SCROLL * window.innerHeight}`,
-        scrub: true,
-        invalidateOnRefresh: true,
-        // The clipped rail hides later photos from lazy loading until they slide in, so fetch them all on arrival.
-        onToggle: () => section.querySelectorAll('img').forEach((img) => (img.loading = 'eager')),
-      },
-    });
-
-    gsap.set(arts, { x: SHIFT });
-    modules.forEach((module, i) => {
-      const at = LEAD + i * (MOVE + HOLD);
-      rail.to(track, { x: () => centre(module) }, at);
-      // Parallax: the picture behind each window lags the board it sits in.
-      rail.to(arts[i], { x: 0 }, at);
-      if (i > 0) rail.to(arts[i - 1], { x: -SHIFT }, at);
-      rail.addLabel(`card${i}`, at + MOVE);
-      const name = module.querySelector('.module-name');
-      if (name) {
-        const draw = drawTrace(name, 0.8).pause();
-        rail.call(() => void draw.play(), undefined, at + MOVE * 0.4);
-      }
-    });
-    rail.to({}, { duration: HOLD });
-
-    /* Keyboard users land on a card the rail has moved off screen, so bring it into view. */
-    section.addEventListener('focusin', (e) => {
-      const target = e.target as Element;
-      const module = target.closest<HTMLElement>('[data-module]');
-      const st = rail.scrollTrigger;
-      // Only keyboard focus moves the rail. A mouse press must never pull a link out from under the pointer.
-      if (!module || !st || !target.matches(':focus-visible')) return;
-      view.scrollLeft = 0;
-      const progress = rail.labels[`card${modules.indexOf(module)}`] / rail.duration();
-      getLenis()?.scrollTo(st.start + (st.end - st.start) * progress, { immediate: true, force: true });
-    });
-
-    return () => view.classList.remove('is-pinned');
+  function work() {
+    const title = document.querySelector('#work .rail-title');
+    if (title) gsap.timeline({ scrollTrigger: { trigger: title, start: 'top 80%', toggleActions: 'play none none none' } }).add(drawTrace(title, 0.9));
   }
 
   function toolboxSection() {
@@ -259,6 +196,7 @@ export function initHome(onSettled: () => void) {
   }
 
   return () => {
+    stopRail();
     stopBoard();
     ScrollTrigger.removeEventListener('refreshInit', relayout);
     mm.revert();

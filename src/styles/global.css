@@ -293,4 +293,3 @@ html.js .await-motion .trace-art { visibility: hidden; animation: failsafe 0s 3.
 }
 .board-canvas[data-ready] { opacity: 1; }
 
-.rail-view.is-pinned { overflow: clip; scroll-snap-type: none; }

@@ -8,6 +8,7 @@ import PadLink from './PadLink.astro';
 import TraceText from './TraceText.astro';
 
 /* A card shows the project's first photo. Until it has one, the system diagram stands in. */
+const pad = (n: number) => String(n).padStart(2, '0');
 const cards = await Promise.all(
   projects.map(async (project) => {
     const photo = project.media.find((media) => media.type === 'image' && media.src);
@@ -16,22 +17,37 @@ const cards = await Promise.all(
 );
 ---
 
-<section class="rail" id="work" aria-labelledby="work-title">
-  <div class="rail-view" data-rail-view tabindex="-1">
-    <div class="rail-track" data-rail-track>
+<section class="rail" id="work" aria-labelledby="work-title" data-rail>
+  <div class="rail-head wrap">
+    <div class="rail-intro">
+      <TraceText id="work-title" text={['FEATURED', 'WORK']} class="rail-title" />
+      <p>{work.intro}</p>
+    </div>
+    <div class="rail-controls">
+      <p class="rail-count" aria-hidden="true">
+        <span class="ref">PCB</span>
+        <span class="rail-count-num"><span data-rail-count>01</span><span class="rail-count-of">/{pad(cards.length)}</span></span>
+      </p>
+      <div class="rail-buttons">
+        <button class="pad pad-ghost rail-btn" type="button" data-rail-step="-1" aria-controls="work-rail" aria-label="Previous project">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg>
+        </button>
+        <button class="pad rail-btn" type="button" data-rail-step="1" aria-controls="work-rail" aria-label="Next project">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5" /></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rail-view" id="work-rail" data-rail-view tabindex="0" role="region" aria-roledescription="carousel" aria-label="Projects. Use the arrow keys to move between them.">
+    <div class="rail-track">
       <div class="rail-edge rail-edge-top" aria-hidden="true"></div>
       <div class="rail-edge rail-edge-bottom" aria-hidden="true"></div>
-
-      <div class="rail-intro">
-        <TraceText id="work-title" text={['FEATURED', 'WORK']} class="rail-title" />
-        <p>{work.intro}</p>
-      </div>
-
       {
         cards.map(({ project, photo, image }, i) => (
           <>
-            <div class="bites" aria-hidden="true"></div>
-            <article class="module" style={boardStyle(project.board)} data-module>
+            {i > 0 && <div class="bites" aria-hidden="true"></div>}
+            <article class="module" style={boardStyle(project.board)} data-module aria-roledescription="slide" aria-label={`${i + 1} of ${cards.length}: ${project.name}`}>
               <span class="hole hole-a" aria-hidden="true"></span>
               <span class="hole hole-b" aria-hidden="true"></span>
               <span class="hole hole-c" aria-hidden="true"></span>
@@ -66,10 +82,10 @@ const cards = await Promise.all(
               </div>
 
               {/* The window repeats the case study link for pointers only, so keyboards and screen readers skip it. */}
-              <a class:list={['module-window', image ? 'has-photo' : 'has-diagram']} href={`/work/${project.slug}/`} data-via={BOARDS[project.board].mask} tabindex="-1" aria-hidden="true">
+              <a class:list={['module-window', image ? 'has-photo' : 'has-diagram']} href={`/work/${project.slug}/`} data-via={BOARDS[project.board].mask} tabindex="-1" aria-hidden="true" draggable="false">
                 <div class="module-art" data-module-art>
                   {image && photo ? (
-                    <Picture src={image} formats={['avif', 'webp']} widths={[560, 960, 1280, 1600]} sizes="(min-width: 1024px) min(70vw, 1080px), min(84vw, 560px)" alt="" loading="lazy" decoding="async" />
+                    <Picture src={image} formats={['avif', 'webp']} widths={[560, 960, 1280, 1600]} sizes="(min-width: 1024px) min(70vw, 1080px), min(84vw, 560px)" alt="" loading="lazy" decoding="async" draggable="false" />
                   ) : (
                     <>
                       <Diagram diagram={project.diagram} title={`System diagram for ${project.name}`} />
@@ -85,32 +101,93 @@ const cards = await Promise.all(
       }
     </div>
   </div>
+
+  {/* A copper trace with a pad for each board. The gold signal sits on the board in view. */}
+  <nav class="rail-nav wrap" aria-label="Choose a project">
+    <div class="rail-bus" data-rail-bus>
+      <span class="rail-bus-fill" data-rail-fill aria-hidden="true"></span>
+      <span class="rail-signal" data-rail-signal aria-hidden="true"></span>
+      <ol style={`--boards:${cards.length}`}>
+        {cards.map(({ project }, i) => (
+          <li>
+            <button type="button" data-rail-go={i} aria-controls="work-rail" aria-current={i === 0 ? 'true' : undefined}>
+              <i aria-hidden="true"></i>
+              <span class="ref">{project.traceName.join(' ')}</span>
+              <span class="sr-only">: show {project.name}</span>
+            </button>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </nav>
+  <p class="sr-only" aria-live="polite" data-rail-live></p>
 </section>
 
 <style>
-  .rail { position: relative; background: var(--void); }
+  .rail { position: relative; padding-block: calc(var(--nav-h) + clamp(28px, 4vw, 56px)) clamp(48px, 6vw, 88px); background: var(--void); --card-w: min(78vw, 1180px); }
+
+  /* Header: the title on the left, the counter and arrow pads on the right. */
+  .rail-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px 48px; margin-bottom: clamp(36px, 4vw, 56px); }
+  .rail-controls { display: flex; align-items: flex-end; gap: 28px; }
+  .rail-count { display: grid; gap: 2px; margin: 0; text-align: right; }
+  .rail-count-num { font: 700 clamp(1.75rem, 2.6vw, 2.5rem) / 1 var(--font-mono); color: var(--trace); font-variant-numeric: tabular-nums; }
+  .rail-count-of { color: var(--silk-dim); font-size: 0.5em; font-weight: 400; margin-left: 4px; }
+  .rail-buttons { display: flex; gap: 12px; }
+  .rail-btn { width: 56px; min-height: 56px; padding: 0; border: 0; background: none; font: inherit; cursor: pointer; }
+  .rail-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* The strip of boards: a native scroller that snaps each board to the centre, with a sliver of each neighbour. */
   .rail-view {
-    display: flex;
-    align-items: center;
-    min-height: 100dvh;
     overflow-x: auto;
     overscroll-behavior-x: contain;
-    scroll-snap-type: x proximity;
+    scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    padding-block: calc(var(--nav-h) + 44px) 44px;
+    padding-block: 30px;
     outline: none;
   }
   .rail-view::-webkit-scrollbar { display: none; }
-  .rail-track { position: relative; display: flex; align-items: stretch; width: max-content; padding-inline: var(--gutter); will-change: transform; }
+  .rail-view:focus-visible { box-shadow: inset 0 0 0 2px var(--trace); }
+  .rail-view.is-dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+  .rail-view.is-dragging * { pointer-events: none; }
+  .rail-track { position: relative; display: flex; align-items: stretch; width: max-content; padding-inline: calc((100cqw - var(--card-w)) / 2); }
+  .rail-view { container-type: inline-size; }
+  @media (hover: hover) and (pointer: fine) {
+    .rail-view { cursor: grab; }
+  }
 
   /* Tooling rails along the panel, with fiducials. */
   .rail-edge { position: absolute; left: 0; right: 0; height: 12px; background: radial-gradient(circle, transparent 3.5px, var(--trace) 4px 5.5px, transparent 6px) 40px 0 / 340px 12px repeat-x; opacity: 0.5; }
-  .rail-edge-top { top: -26px; }
-  .rail-edge-bottom { bottom: -26px; }
+  .rail-edge-top { top: -22px; }
+  .rail-edge-bottom { bottom: -22px; }
 
-  .rail-intro { display: flex; flex-direction: column; justify-content: center; gap: 24px; width: min(52vw, 640px); padding-right: 48px; flex: none; scroll-snap-align: start; }
-  .rail-intro :global(.rail-title) { --trace-size: clamp(2.1rem, 5.4vw, 5rem); }
-  .rail-intro p { margin: 0; max-width: 26em; font-size: clamp(1.0625rem, 1.5vw, 1.375rem); line-height: 1.4; color: var(--silk-dim); text-wrap: pretty; }
+  .rail-intro { display: grid; gap: 18px; max-width: 640px; }
+  .rail-intro :global(.rail-title) { --trace-size: clamp(2.1rem, 4.6vw, 4.2rem); }
+  .rail-intro p { margin: 0; max-width: 26em; font-size: clamp(1.0625rem, 1.4vw, 1.3125rem); line-height: 1.4; color: var(--silk-dim); text-wrap: pretty; }
+
+  /* The navigator: a copper bus with a via per board. Gold fills the trace up to the board in view. */
+  .rail-nav { margin-top: clamp(28px, 3vw, 44px); }
+  .rail-bus { position: relative; --bus-y: 9px; }
+  .rail-bus::before { content: ""; position: absolute; left: 0; right: 0; top: calc(var(--bus-y) - 1px); height: 2px; background: color-mix(in srgb, var(--cu) 70%, transparent); }
+  .rail-bus-fill { position: absolute; left: 0; top: calc(var(--bus-y) - 1px); width: 100%; height: 2px; background: var(--trace); transform-origin: 0 50%; transform: scaleX(0); transition: transform 520ms var(--ease-out); }
+  .rail-signal { position: absolute; left: 0; top: calc(var(--bus-y) - 9px); width: 18px; height: 18px; border-radius: 50%; background: var(--trace); box-shadow: 0 0 0 5px color-mix(in srgb, var(--trace) 22%, transparent), 0 0 18px color-mix(in srgb, var(--trace) 55%, transparent); transform: translateX(-9px); transition: transform 520ms var(--ease-out); pointer-events: none; }
+  .rail-bus ol { position: relative; display: grid; grid-template-columns: repeat(var(--boards, 7), minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+  .rail-bus li { display: flex; justify-content: center; }
+  .rail-bus button {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    padding: 0 4px 6px;
+    border: 0;
+    background: none;
+    color: var(--silk-dim);
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+  }
+  .rail-bus button i { width: 18px; height: 18px; border: 2.5px solid var(--trace); border-radius: 50%; background: var(--void); transition: transform 220ms var(--ease-out); }
+  .rail-bus button .ref { color: inherit; font-size: 0.75rem; letter-spacing: 0.04em; transition: color 180ms ease; }
+  .rail-bus button[aria-current] { color: var(--silk); }
+  .rail-bus button:focus-visible { outline: 2px solid var(--trace); outline-offset: 4px; }
 
   /* Mouse bites: the breakaway tabs between boards on a panel. */
   .bites { flex: none; width: 30px; background: radial-gradient(circle, var(--mask) 3px, transparent 3.6px) center / 12px 15px repeat-y; opacity: 0.8; }
@@ -122,8 +199,8 @@ const cards = await Promise.all(
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
     gap: clamp(20px, 2.2vw, 32px);
-    width: min(78vw, 1180px);
-    height: min(78dvh, 740px);
+    width: var(--card-w);
+    height: min(72dvh, 700px);
     padding: clamp(40px, 3.4vw, 52px) clamp(32px, 3.8vw, 56px);
     background: var(--mask);
     color: var(--silk);
@@ -192,15 +269,19 @@ const cards = await Promise.all(
   .module-ref { position: absolute; right: 62px; bottom: 16px; }
 
   @media (hover: hover) and (pointer: fine) {
+    .rail-bus button:hover { color: var(--silk); }
+    .rail-bus button:hover i { transform: scale(1.25); }
     .module-out:hover { color: var(--trace); text-decoration-color: currentColor; }
     .module-out:hover svg { transform: translate(2px, -2px); }
     .module-window:hover :global(img) { scale: 1.03; }
   }
 
   @media (max-width: 1023px) {
-    .rail-view { min-height: 0; padding-block: 72px; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); }
-    .rail-track { align-items: stretch; }
-    .rail-intro { width: min(84vw, 520px); padding-right: 24px; }
+    .rail { --card-w: min(84vw, 560px); }
+    .rail-controls { width: 100%; justify-content: space-between; }
+    .rail-count { text-align: left; }
+    /* Too narrow for names under every via; the counter carries the place instead. */
+    .rail-bus button .ref { display: none; }
     .module { width: min(84vw, 560px); height: auto; grid-template-rows: auto; align-content: start; padding: 40px 26px 44px; --c: 18px; }
     .module-head { grid-template-columns: 1fr; gap: 18px; }
     .module-title :global(.module-name) { --trace-size: clamp(1.6rem, 7vw, 2.4rem); }
@@ -217,6 +298,10 @@ const cards = await Promise.all(
     .hole-d { bottom: 14px; right: 24px; }
     .module-ref { right: 46px; bottom: 11px; }
     .bites { width: 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rail-bus-fill, .rail-signal { transition: none; }
   }
 
   @media (max-height: 760px) and (min-width: 1024px) {
