@@ -57,7 +57,7 @@ export function initSequence(root: HTMLElement) {
       const to = Number(step.dataset.to);
       const t = Math.min(1, Math.max(0, (progress - from) / (to - from)));
       step.style.setProperty('--p', t.toFixed(3));
-      step.dataset.state = t <= 0 ? 'queued' : t >= 1 ? 'done' : 'printing';
+      step.dataset.state = t <= 0 ? 'queued' : t >= 1 ? 'done' : 'active';
     }
   };
 

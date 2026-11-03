@@ -63,19 +63,30 @@ const last = String(sequence.frames).padStart(3, '0');
     margin-inline: auto;
     background: radial-gradient(circle, color-mix(in srgb, var(--cu) 45%, transparent) 1px, transparent 1.6px) 0 0 / 18px 18px;
   }
+  /* Feathered edges, so a close-up that runs off the frame fades out instead of ending in a hard line. */
   .seq-frame img,
-  .seq-frame canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .seq-frame canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    --feather: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent), linear-gradient(transparent, #000 6%, #000 94%, transparent);
+    -webkit-mask: var(--feather);
+    -webkit-mask-composite: source-in;
+    mask: var(--feather);
+    mask-composite: intersect;
+  }
   .seq-frame canvas { display: none; }
 
   .seq-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
   .seq-steps li { display: grid; align-content: start; gap: 2px; min-width: 0; }
   .seq-label { font-size: 0.9375rem; font-weight: 700; line-height: 1.3; }
   .seq-steps .ref { color: var(--silk-dim); }
-  /* Each part's own print progress, filled from the left as it prints. */
+  /* Each step's own progress, filled from the left while it runs. */
   .seq-steps i { height: 2px; margin-top: 8px; background: linear-gradient(var(--trace), var(--trace)) 0 0 / calc(var(--p, 1) * 100%) 100% no-repeat, color-mix(in srgb, var(--silk) 18%, transparent); }
   .seq-note { margin: 10px 0 0; color: var(--ink-dim); font-size: 0.875rem; line-height: 1.4; }
 
-  /* Live: the stage holds still while the reader scrolls through the print. */
+  /* Live: the stage holds still while the reader scrolls through the animation. */
   .seq.is-live .seq-track { height: 250vh; }
   /* Roughly centred in the space under the nav; the script reads this offset back to time the scrub. */
   .seq.is-live .seq-stage { position: sticky; top: max(calc(var(--nav-h) + 20px), calc(50dvh + var(--nav-h) / 2 - 290px)); }
@@ -83,7 +94,7 @@ const last = String(sequence.frames).padStart(3, '0');
   /* Kept for screen readers, which still read its alt text. */
   .seq.is-live .seq-still { opacity: 0; }
   .seq.is-live [data-state='queued'] .seq-label { color: var(--silk-dim); }
-  .seq.is-live [data-state='printing'] .seq-label { color: var(--trace); }
+  .seq.is-live [data-state='active'] .seq-label { color: var(--trace); }
 
   @media (max-width: 620px) {
     .seq.is-live .seq-track { height: 210vh; }

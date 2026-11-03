@@ -39,11 +39,11 @@ const stackTables = [
   { name: 'Software', rows: project.software ?? [] },
 ].filter((table) => table.rows.length);
 
-const sequence = project.sequence;
+const sequences = project.sequences ?? [];
 const index = [
   { id: 'problem', label: 'Problem' },
   { id: 'approach', label: 'Approach' },
-  ...(sequence ? [{ id: 'parts', label: sequence.heading.charAt(0) + sequence.heading.slice(1).toLowerCase() }] : []),
+  ...sequences.map((sequence) => ({ id: sequence.id, label: sequence.heading.charAt(0) + sequence.heading.slice(1).toLowerCase() })),
   { id: 'stack', label: 'Stack' },
   { id: 'results', label: 'Results' },
 ];
@@ -104,13 +104,13 @@ const index = [
             {inline.map((media) => <Media media={media} class="case-figure" />)}
           </section>
 
-          {sequence && (
-            <section id="parts" class="case-sec" data-case-sec>
+          {sequences.map((sequence) => (
+            <section id={sequence.id} class="case-sec" data-case-sec>
               <TraceText text={sequence.heading} class="case-h" />
               <p class="case-text">{sequence.intro}</p>
               <Sequence sequence={sequence} board={project.board} />
             </section>
-          )}
+          ))}
 
           <section id="stack" class="case-sec" data-case-sec>
             <TraceText text="STACK" class="case-h" />

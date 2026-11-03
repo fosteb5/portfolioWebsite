@@ -58,6 +58,8 @@ export interface Diagram {
 
 /** A rendered animation that plays as the reader scrolls. */
 export interface Sequence {
+  /** Anchor for the section, used in the page address and the page index. */
+  id: string;
   /** Folder in public/ that holds the 1280 and 720 frame folders. Ends with a slash. */
   src: string;
   frames: number;
@@ -114,7 +116,8 @@ export interface Project {
   metrics: { label: string; value: string }[];
   diagram: Diagram;
   media: Media[];
-  sequence?: Sequence;
+  /** Rendered scroll animations, each shown as its own section after Approach. */
+  sequences?: Sequence[];
 }
 
 /* ------------------------------------------------------------------ */
@@ -271,26 +274,44 @@ export const projects: Project[] = [
       },
       {
         type: 'image',
-        src: 'projects/liftlabs/blimp.jpg',
-        alt: 'Concept render of the LiftLabs blimp, with a solar array along its top and a propulsion pod underneath',
-        caption: 'Concept render of the finished design, from liftlabs.ca',
+        src: 'projects/liftlabs/render.jpg',
+        alt: 'Render of the finished LiftLabs blimp against a blue sky, with four solar panels across the top, purple fins and a motor arm underneath',
+        caption: 'Render of the finished design',
         ratio: '16/9',
       },
     ],
-    // Rendered in Blender from Projects/SolarBlimp/Blender/liftlabs-print.blend. The step timings match its LL_render.py.
-    sequence: {
-      src: '/sequences/liftlabs-print/',
-      frames: 72,
-      heading: 'PARTS',
-      intro: 'Three of the blimp’s parts from the SolidWorks model, rendered in Blender from their STL exports. Scroll to print them layer by layer.',
-      alt: 'Render of the motor-to-servo mount, the mounting plate with Lift Labs cut into its face, and the GPS enclosure, all printed in purple plastic',
-      note: 'Rendered in Blender. The colour and print order are for illustration.',
-      steps: [
-        { label: 'Motor-to-servo mount', detail: '60 × 60 × 30 mm', from: 0.05, to: 0.37 },
-        { label: 'Mounting plate', detail: '305 × 181 × 20 mm', from: 0.33, to: 0.65 },
-        { label: 'GPS enclosure', detail: '100 × 50 × 20 mm', from: 0.61, to: 0.93 },
-      ],
-    },
+    // Rendered in Blender from Projects/SolarBlimp/Blender/liftlabs-print.blend.
+    // Step timings match the scene's render script: BL_render.py for the blimp, LL_render.py for the parts.
+    sequences: [
+      {
+        id: 'design',
+        src: '/sequences/liftlabs-blimp/',
+        frames: 90,
+        heading: 'DESIGN',
+        intro: 'The finished blimp, built in Blender from photos of the envelope and the real mounting plate and motor mounts. Scroll to fly round it and watch the motors tilt.',
+        alt: 'Render of the finished LiftLabs blimp: a charcoal envelope with purple inflatable fins, four flexible solar panels across the top, and 1 m arms under the belly with a tilting motor at each end',
+        note: 'Rendered in Blender. The envelope, plate and motor mounts follow the real parts; the motors, props and arms are stand-ins.',
+        steps: [
+          { label: 'Envelope', detail: '13 ft PVC, inflatable fins', from: 0, to: 0.26 },
+          { label: 'Solar array', detail: '4 × 100 W flexible panels', from: 0.26, to: 0.52 },
+          { label: 'Thrust vectoring', detail: 'Motors tilt on 1 m arms', from: 0.6, to: 0.98 },
+        ],
+      },
+      {
+        id: 'parts',
+        src: '/sequences/liftlabs-print/',
+        frames: 72,
+        heading: 'PARTS',
+        intro: 'Three of the blimp’s parts from the SolidWorks model, rendered in Blender from their STL exports. Scroll to print them layer by layer.',
+        alt: 'Render of the motor-to-servo mount, the mounting plate with Lift Labs cut into its face, and the GPS enclosure, all printed in purple plastic',
+        note: 'Rendered in Blender. The colour and print order are for illustration.',
+        steps: [
+          { label: 'Motor-to-servo mount', detail: '60 × 60 × 30 mm', from: 0.05, to: 0.37 },
+          { label: 'Mounting plate', detail: '305 × 181 × 20 mm', from: 0.33, to: 0.65 },
+          { label: 'GPS enclosure', detail: '100 × 50 × 20 mm', from: 0.61, to: 0.93 },
+        ],
+      },
+    ],
   },
   {
     slug: 'tethered-drone',
