@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lift Labs | Autonomous Solar Aviation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="app-container">
+      <header>
+        <div class="logo">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 4L4 36H36L20 4Z" fill="#8B5CF6"/>
+            <path d="M20 12L10 32H30L20 12Z" fill="#FCD34D"/>
+          </svg>
+          <span>Lift Labs</span>
+        </div>
+        <nav>
+          <a href="#mission">Mission</a>
+          <a href="#tech">Technology</a>
+          <a href="#team">Team</a>
+          <a href="#contact" class="cta-button">Join Us</a>
+        </nav>
+      </header>
+
+      <main>
+        <section id="hero" class="hero-section">
+          <div class="hero-content">
+            <h1 class="split-text">Ascending <br> <span class="highlight">Forever</span></h1>
+            <p>Developing the world's first fully autonomous, infinite-endurance solar blimp platform.</p>
+            <div class="hero-actions">
+              <button class="primary-btn">Explore Platform</button>
+              <button class="secondary-btn">View Specs</button>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="blimp-model">
+              <!-- CSS/SVG Blimp Representation -->
+              <svg width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg" class="floating-blimp">
+                <defs>
+                  <linearGradient id="hullGradient" x1="100" y1="200" x2="500" y2="200" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#E2E8F0" />
+                    <stop offset="50%" stop-color="#FFFFFF" />
+                    <stop offset="100%" stop-color="#94A3B8" />
+                  </linearGradient>
+                  <linearGradient id="solarGradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#1E293B" />
+                    <stop offset="100%" stop-color="#0F172A" />
+                  </linearGradient>
+                </defs>
+                <!-- Blimp Hull -->
+                <ellipse cx="300" cy="200" rx="200" ry="80" fill="url(#hullGradient)" opacity="0.9" />
+                <!-- Solar Arrays -->
+                <path d="M180 160 Q 300 130 420 160 L 400 180 Q 300 150 200 180 Z" fill="#1E293B" opacity="0.8" />
+                <!-- Fins -->
+                <path d="M140 200 L 100 240 L 160 210 Z" fill="#64748B" />
+                <path d="M140 200 L 100 160 L 160 190 Z" fill="#64748B" />
+                <!-- Cabin -->
+                <rect x="250" y="270" width="100" height="20" rx="10" fill="#334155" />
+              </svg>
+              <div class="glow-effect"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="mission" class="mission-section">
+          <h2>Our Mission</h2>
+          <div class="cards-grid">
+            <div class="card glass">
+              <div class="icon">∞</div>
+              <h3>Infinite Flight</h3>
+              <p>Harnessing solar energy to stay aloft indefinitely, monitoring the earth from the stratosphere.</p>
+            </div>
+            <div class="card glass">
+              <div class="icon">🤖</div>
+              <h3>Full Autonomy</h3>
+              <p>Self-governing navigation systems capable of adapting to changing weather patterns in real-time.</p>
+            </div>
+            <div class="card glass">
+              <div class="icon">🌍</div>
+              <h3>Global Link</h3>
+              <p>Providing connectivity and data services to remote areas without the cost of satellite launches.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="tech" class="tech-section">
+          <h2>Core Technology</h2>
+          <div class="tech-container">
+            <div class="tech-item">
+              <h3>Photovoltaic Skin</h3>
+              <p>Ultra-lightweight flexible solar skin maximizing energy capture.</p>
+            </div>
+             <div class="tech-item">
+              <h3>Helium Retention</h3>
+              <p>Next-gen materials ensuring minimal gas loss over years of operation.</p>
+            </div>
+             <div class="tech-item">
+              <h3>AI Weather Routing</h3>
+              <p>Machine learning models that predict and ride stratospheric winds.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="team" class="team-section">
+          <h2>The Engineers</h2>
+          <div class="team-grid">
+            <!-- 5 Engineers -->
+            <div class="team-member">
+              <div class="avatar"></div>
+              <h4>Alex Chen</h4>
+              <p>Chief Engineer</p>
+            </div>
+            <div class="team-member">
+              <div class="avatar"></div>
+              <h4>Sarah Jones</h4>
+              <p>Aerodynamics</p>
+            </div>
+            <div class="team-member">
+              <div class="avatar"></div>
+              <h4>Marcus Thorne</h4>
+              <p>Solar Systems</p>
+            </div>
+            <div class="team-member">
+              <div class="avatar"></div>
+              <h4>Dr. Emily Ray</h4>
+              <p>Autonomy AI</p>
+            </div>
+            <div class="team-member">
+              <div class="avatar"></div>
+              <h4>David Vo</h4>
+              <p>Materials</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>© 2025 Lift Labs. Ascending to the future.</p>
+      </footer>
+    </div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

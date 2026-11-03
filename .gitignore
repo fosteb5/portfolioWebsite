@@ -16,5 +16,15 @@ Thumbs.db
 # Browser test artifacts
 .playwright-mcp/
 
-# Raw project files (CAD, photos, documents). Only finished renders go into src/ or public/.
-/Projects/
+# Project source files (CAD, Blender scenes, photos, documents) are published under Projects/, except:
+# a clone of github.com/fosteb5/LiftLabs, which is already on GitHub,
+/Projects/SolarBlimp/Code/AeroDonkeys/
+# render frame dumps, which liftlabs-print.blend regenerates (the finished video and stills are kept),
+/Projects/SolarBlimp/Blender/renders/*/
+*.blend1
+# a packaged Electron build,
+/Projects/testing/dist-electron/
+# and application forms that list teammates' and staff contact details.
+/Projects/SolarBlimp/Application/Thompson Fund Application.docx
+/Projects/Burbon Dispencer/Application.pdf
+/Projects/Burbon Dispencer/Application-Foster_Computer.pdf

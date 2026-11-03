@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Polaroid</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-status-bar-style" content="black-translucent">
+</head>
+
+<body>
+
+    <!-- Camera "Device" Interface -->
+    <div id="camera-interface" class="interface-layer">
+
+        <!-- Top Panel: Branding & Status -->
+        <div class="top-plate">
+            <div class="brand-badge">POLAROID <span style="font-weight:100">600</span></div>
+            <div class="status-array">
+                <div class="led ready active"></div>
+            </div>
+        </div>
+
+        <!-- Middle: Recessed Viewfinder Housing -->
+        <div class="lens-housing">
+            <div class="housing-bevel">
+                <div class="viewfinder-glass">
+                    <!-- The Video Feed -->
+                    <video id="camera-feed" autoplay playsinline muted></video>
+
+                    <!-- The Mechanical Shutter (Strictly Clipped here) -->
+                    <div class="shutter-mechanism">
+                        <div class="iris-blade"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom: Control Grip -->
+        <div class="control-grip">
+            <button id="gallery-btn" class="secondary-btn">
+                <div class="btn-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                </div>
+            </button>
+
+            <div class="shutter-housing">
+                <button id="shutter-btn" class="main-shutter"></button>
+            </div>
+
+            <div class="spacer"></div>
+        </div>
+    </div>
+
+    <!-- Gallery Overlay -->
+    <div id="gallery-view" class="view-layer">
+        <header class="gallery-nav">
+            <button id="back-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6" />
+                </svg>
+                Back
+            </button>
+            <span>Photo Lab</span>
+        </header>
+
+        <div class="gallery-content">
+            <div class="section-title">Developing</div>
+            <div id="developing-grid" class="photo-grid"></div>
+
+            <div class="section-title">Developed</div>
+            <div id="developed-grid" class="photo-grid"></div>
+        </div>
+    </div>
+
+    <!-- Hidden Capture Canvas -->
+    <canvas id="capture-canvas" style="display: none;"></canvas>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

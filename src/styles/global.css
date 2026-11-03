@@ -5,6 +5,9 @@
 @import "@fontsource/b612-mono/latin-400.css";
 @import "@fontsource/b612-mono/latin-700.css";
 
+/* Other projects' code lives in Projects/; keep its class names out of this site's CSS. */
+@source not "../../Projects";
+
 /* Colours are runtime variables so any section can become a different board. */
 @theme inline {
   --color-mask: var(--mask);
