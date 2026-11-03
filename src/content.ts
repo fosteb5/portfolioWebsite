@@ -627,7 +627,7 @@ export const contact = {
   location: 'Based in Ontario (GTA / London)',
   links: [
     { label: 'Email', value: 'foster5beard@gmail.com', href: 'mailto:foster5beard@gmail.com' },
-    { label: 'LinkedIn', value: 'in/foster-beard', href: 'https://www.linkedin.com/in/foster-beard' },
+    { label: 'LinkedIn', value: 'in/fosterbeard', href: 'https://www.linkedin.com/in/fosterbeard' },
     // TODO: confirm this is the GitHub profile you want to show.
     { label: 'GitHub', value: 'fosteb5', href: 'https://github.com/fosteb5' },
     { label: 'Phone', value: '(705) 731-9471', href: 'tel:+17057319471' },
