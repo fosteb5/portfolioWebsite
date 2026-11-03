@@ -42,7 +42,7 @@ npm run preview
 
 ## Deployment
 
-The site runs for free on Cloudflare Workers at https://foster-beard.foster5beard.workers.dev. It is fully static, so it needs no server and no paid plan.
+The site runs for free on Cloudflare Workers at https://fosterbeard.ca (also reachable at https://foster-beard.foster5beard.workers.dev). It is fully static, so it needs no server and no paid plan.
 
 Every push to `main` builds and publishes the site automatically. Build status appears next to each commit on GitHub, and deployment settings are in `wrangler.jsonc`.
 
