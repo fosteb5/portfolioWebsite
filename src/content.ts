@@ -187,7 +187,7 @@ export const about = {
 
 export const work = {
   heading: 'FEATURED WORK',
-  intro: 'Seven boards, from an airship to an app. Each one opens onto the full story.',
+  intro: 'Six boards, from an airship to a marketplace. Each one opens onto the full story.',
   cta: 'Read the case study',
 };
 
@@ -573,35 +573,6 @@ export const projects: Project[] = [
       },
       { type: 'image', src: '', alt: 'A Copyroom seller dashboard', caption: 'Seller view', ratio: '3/2' },
     ],
-  },
-  {
-    slug: 'watch-converter',
-    name: 'Apple Watch unit converter',
-    traceName: ['UNIT', 'CONVERTER'],
-    board: 'berry',
-    chip: 'SWIFT',
-    summary: 'A unit converter app for Apple Watch, written in SwiftUI.',
-    role: 'Design and build', // TODO: confirm.
-    when: '2026',
-    tags: ['SwiftUI', 'Xcode', 'watchOS'],
-    // TODO: confirm this framing of the problem. It is written from your résumé.
-    problem: ['Quick unit conversions are a natural fit for something already on your wrist.'],
-    approach: ['I wrote the app in SwiftUI using Xcode.'],
-    software: [
-      { area: 'Interface', item: 'SwiftUI' },
-      { area: 'Tooling', item: 'Xcode' },
-    ],
-    results: ['A working unit converter for Apple Watch.'],
-    metrics: [],
-    diagram: {
-      nodes: [
-        { id: 'in', label: 'Value and units', col: 0, row: 0 },
-        { id: 'logic', label: 'Conversion', col: 1, row: 0 },
-        { id: 'ui', label: 'SwiftUI view', col: 2, row: 0 },
-      ],
-      edges: [['in', 'logic'], ['logic', 'ui']],
-    },
-    media: [{ type: 'image', src: '', alt: 'The converter on an Apple Watch', caption: 'The app on the wrist', ratio: '1/1' }],
   },
 ];
 

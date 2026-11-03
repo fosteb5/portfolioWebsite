@@ -21,7 +21,7 @@ export function initRail(section: HTMLElement) {
   const arts = modules.map((module) => module.querySelector<HTMLElement>('[data-module-art]'));
   const reduce = prefersReducedMotion();
   const wide = matchMedia('(min-width: 1024px)');
-  // Set up when the section comes near, not at load: measuring every stroke of seven names is slow on a phone.
+  // Set up when the section comes near, not at load: measuring every stroke of every board's name is slow on a phone.
   let draws: (ReturnType<typeof drawTrace> | null)[] = [];
   let cancelIdle = () => undefined as void;
   const prepareDraws = () => {
