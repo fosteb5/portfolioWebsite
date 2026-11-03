@@ -23,20 +23,6 @@ const cards = await Promise.all(
       <TraceText id="work-title" text={['FEATURED', 'WORK']} class="rail-title" />
       <p>{work.intro}</p>
     </div>
-    <div class="rail-controls">
-      <p class="rail-count" aria-hidden="true">
-        <span class="ref">PCB</span>
-        <span class="rail-count-num"><span data-rail-count>01</span><span class="rail-count-of">/{pad(cards.length)}</span></span>
-      </p>
-      <div class="rail-buttons">
-        <button class="pad pad-ghost rail-btn" type="button" data-rail-step="-1" aria-controls="work-rail" aria-label="Previous project">
-          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg>
-        </button>
-        <button class="pad rail-btn" type="button" data-rail-step="1" aria-controls="work-rail" aria-label="Next project">
-          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5" /></svg>
-        </button>
-      </div>
-    </div>
   </div>
 
   <div class="rail-view" id="work-rail" data-rail-view tabindex="0" role="region" aria-roledescription="carousel" aria-label="Projects. Use the arrow keys to move between them.">
@@ -102,8 +88,16 @@ const cards = await Promise.all(
     </div>
   </div>
 
-  {/* A copper trace with a pad for each board. The gold signal sits on the board in view. */}
-  <nav class="rail-nav wrap" aria-label="Choose a project">
+  {/* One bar under the boards: the counter, the arrow pads, and a copper trace with a via for each board. */}
+  <div class="rail-bar">
+    <p class="rail-count" aria-hidden="true">
+      <span class="ref">PCB</span>
+      <span class="rail-count-num"><span data-rail-count>01</span><span class="rail-count-of">/{pad(cards.length)}</span></span>
+    </p>
+    <button class="pad pad-ghost rail-btn rail-prev" type="button" data-rail-step="-1" aria-controls="work-rail" aria-label="Previous project">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg>
+    </button>
+    <nav class="rail-nav" aria-label="Choose a project">
     <div class="rail-bus" data-rail-bus>
       <span class="rail-bus-fill" data-rail-fill aria-hidden="true"></span>
       <span class="rail-signal" data-rail-signal aria-hidden="true"></span>
@@ -119,20 +113,32 @@ const cards = await Promise.all(
         ))}
       </ol>
     </div>
-  </nav>
+    </nav>
+    <button class="pad rail-btn rail-next" type="button" data-rail-step="1" aria-controls="work-rail" aria-label="Next project">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5" /></svg>
+    </button>
+  </div>
   <p class="sr-only" aria-live="polite" data-rail-live></p>
 </section>
 
 <style>
-  .rail { position: relative; padding-block: calc(var(--nav-h) + clamp(28px, 4vw, 56px)) clamp(48px, 6vw, 88px); background: var(--void); --card-w: min(78vw, 1180px); }
+  .rail {
+    position: relative;
+    padding-block: calc(var(--nav-h) + clamp(28px, 4vw, 56px)) clamp(48px, 6vw, 88px);
+    background: var(--void);
+    --card-w: min(76vw, 1120px);
+    /* Tall enough to read, short enough that a whole board and the control bar under it share one screen. */
+    --card-h: clamp(400px, calc(100dvh - var(--nav-h) - 210px), 660px);
+  }
 
-  /* Header: the title on the left, the counter and arrow pads on the right. */
-  .rail-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px 48px; margin-bottom: clamp(36px, 4vw, 56px); }
-  .rail-controls { display: flex; align-items: flex-end; gap: 28px; }
-  .rail-count { display: grid; gap: 2px; margin: 0; text-align: right; }
-  .rail-count-num { font: 700 clamp(1.75rem, 2.6vw, 2.5rem) / 1 var(--font-mono); color: var(--trace); font-variant-numeric: tabular-nums; }
-  .rail-count-of { color: var(--silk-dim); font-size: 0.5em; font-weight: 400; margin-left: 4px; }
-  .rail-buttons { display: flex; gap: 12px; }
+  .rail-head { margin-bottom: clamp(28px, 3.4vw, 48px); }
+
+  /* The control bar: counter, arrow pads either side of the bus. Everything centres on the bus line, 28px down. */
+  /* As wide as a board, so its ends line up with the board in view. */
+  .rail-bar { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; align-items: start; gap: 12px 22px; width: var(--card-w); margin: clamp(24px, 2.6vw, 36px) auto 0; }
+  .rail-count { display: flex; align-items: baseline; gap: 10px; margin: 13px 8px 0 0; }
+  .rail-count-num { font: 700 1.875rem / 1 var(--font-mono); color: var(--trace); font-variant-numeric: tabular-nums; }
+  .rail-count-of { color: var(--silk-dim); font-size: 0.5em; font-weight: 400; margin-left: 3px; }
   .rail-btn { width: 56px; min-height: 56px; padding: 0; border: 0; background: none; font: inherit; cursor: pointer; }
   .rail-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
@@ -165,12 +171,11 @@ const cards = await Promise.all(
   .rail-intro p { margin: 0; max-width: 26em; font-size: clamp(1.0625rem, 1.4vw, 1.3125rem); line-height: 1.4; color: var(--silk-dim); text-wrap: pretty; }
 
   /* The navigator: a copper bus with a via per board. Gold fills the trace up to the board in view. */
-  .rail-nav { margin-top: clamp(28px, 3vw, 44px); }
-  .rail-bus { position: relative; --bus-y: 9px; }
+  .rail-bus { position: relative; --bus-y: 28px; }
   .rail-bus::before { content: ""; position: absolute; left: 0; right: 0; top: calc(var(--bus-y) - 1px); height: 2px; background: color-mix(in srgb, var(--cu) 70%, transparent); }
   .rail-bus-fill { position: absolute; left: 0; top: calc(var(--bus-y) - 1px); width: 100%; height: 2px; background: var(--trace); transform-origin: 0 50%; transform: scaleX(0); transition: transform 520ms var(--ease-out); }
   .rail-signal { position: absolute; left: 0; top: calc(var(--bus-y) - 9px); width: 18px; height: 18px; border-radius: 50%; background: var(--trace); box-shadow: 0 0 0 5px color-mix(in srgb, var(--trace) 22%, transparent), 0 0 18px color-mix(in srgb, var(--trace) 55%, transparent); transform: translateX(-9px); transition: transform 520ms var(--ease-out); pointer-events: none; }
-  .rail-bus ol { position: relative; display: grid; grid-template-columns: repeat(var(--boards, 7), minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+  .rail-bus ol { position: relative; display: grid; grid-template-columns: repeat(var(--boards, 7), minmax(0, 1fr)); margin: 0; padding: 19px 0 0; list-style: none; }
   .rail-bus li { display: flex; justify-content: center; }
   .rail-bus button {
     display: grid;
@@ -200,7 +205,7 @@ const cards = await Promise.all(
     grid-template-rows: auto minmax(0, 1fr);
     gap: clamp(20px, 2.2vw, 32px);
     width: var(--card-w);
-    height: min(72dvh, 700px);
+    height: var(--card-h);
     padding: clamp(40px, 3.4vw, 52px) clamp(32px, 3.8vw, 56px);
     background: var(--mask);
     color: var(--silk);
@@ -278,11 +283,15 @@ const cards = await Promise.all(
 
   @media (max-width: 1023px) {
     .rail { --card-w: min(84vw, 560px); }
-    .rail-controls { width: 100%; justify-content: space-between; }
-    .rail-count { text-align: left; }
+    /* Phones: the gold signal shows the place, so the counter makes way for the board and buttons to share the screen. */
+    .rail-bar { grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; margin-top: 14px; }
+    .rail-count { display: none; }
+    .rail-view { padding-block: 18px; }
+    .rail-edge-top { top: -16px; }
+    .rail-edge-bottom { bottom: -16px; }
     /* Too narrow for names under every via; the counter carries the place instead. */
     .rail-bus button .ref { display: none; }
-    .module { width: min(84vw, 560px); height: auto; grid-template-rows: auto; align-content: start; padding: 40px 26px 44px; --c: 18px; }
+    .module { width: min(84vw, 560px); height: auto; grid-template-rows: auto; align-content: start; padding: 32px 22px 30px; gap: 16px; --c: 18px; }
     .module-head { grid-template-columns: 1fr; gap: 18px; }
     .module-title :global(.module-name) { --trace-size: clamp(1.6rem, 7vw, 2.4rem); }
     /* Phones get the picture above the text. */
@@ -304,8 +313,13 @@ const cards = await Promise.all(
     .rail-bus-fill, .rail-signal { transition: none; }
   }
 
+  /* Short, wide screens: the text and the window sit side by side, so the picture keeps its height. */
   @media (max-height: 760px) and (min-width: 1024px) {
-    .module { height: 82dvh; padding-block: 30px; gap: 16px; }
+    .rail { --card-h: clamp(420px, calc(100dvh - var(--nav-h) - 190px), 560px); }
+    .rail-view { padding-block: 22px; }
+    .module-tags { display: none; }
+    .module { grid-template-rows: minmax(0, 1fr); grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); padding-block: 34px; gap: clamp(22px, 2.6vw, 36px); }
+    .module-head { grid-template-columns: minmax(0, 1fr); align-content: start; gap: 16px; }
     .module-title { gap: 10px; }
     .module-title :global(.module-name) { --trace-size: clamp(1.4rem, 2.3vw, 2.1rem); }
     .module-summary { font-size: 1rem; }
