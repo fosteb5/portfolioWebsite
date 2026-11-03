@@ -12,7 +12,7 @@ const { sequence, board } = Astro.props;
 const last = String(sequence.frames).padStart(3, '0');
 ---
 
-<div class="seq" style={boardStyle(board)} data-seq data-src={sequence.src} data-frames={sequence.frames}>
+<div class="seq" style={`${boardStyle(board)};--seq-scroll:${sequence.scroll ?? 250}`} data-seq data-src={sequence.src} data-frames={sequence.frames}>
   <div class="seq-track" data-seq-track>
     <div class="seq-stage" data-seq-stage>
       <div class="seq-frame">
@@ -30,7 +30,7 @@ const last = String(sequence.frames).padStart(3, '0');
         />
         <canvas aria-hidden="true"></canvas>
       </div>
-      <ol class="seq-steps">
+      <ol class="seq-steps" style={`--steps:${sequence.steps.length}`} data-count={sequence.steps.length}>
         {sequence.steps.map((step) => (
           <li data-seq-step data-from={step.from} data-to={step.to}>
             <span class="seq-label">{step.label}</span>
@@ -78,7 +78,7 @@ const last = String(sequence.frames).padStart(3, '0');
   }
   .seq-frame canvas { display: none; }
 
-  .seq-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+  .seq-steps { display: grid; grid-template-columns: repeat(var(--steps, 3), minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
   .seq-steps li { display: grid; align-content: start; gap: 2px; min-width: 0; }
   .seq-label { font-size: 0.9375rem; font-weight: 700; line-height: 1.3; }
   .seq-steps .ref { color: var(--silk-dim); }
@@ -87,7 +87,7 @@ const last = String(sequence.frames).padStart(3, '0');
   .seq-note { margin: 10px 0 0; color: var(--ink-dim); font-size: 0.875rem; line-height: 1.4; }
 
   /* Live: the stage holds still while the reader scrolls through the animation. */
-  .seq.is-live .seq-track { height: 250vh; }
+  .seq.is-live .seq-track { height: calc(var(--seq-scroll, 250) * 1vh); }
   /* Roughly centred in the space under the nav; the script reads this offset back to time the scrub. */
   .seq.is-live .seq-stage { position: sticky; top: max(calc(var(--nav-h) + 20px), calc(50dvh + var(--nav-h) / 2 - 290px)); }
   .seq.is-live .seq-frame canvas { display: block; }
@@ -97,8 +97,9 @@ const last = String(sequence.frames).padStart(3, '0');
   .seq.is-live [data-state='active'] .seq-label { color: var(--trace); }
 
   @media (max-width: 620px) {
-    .seq.is-live .seq-track { height: 210vh; }
+    .seq.is-live .seq-track { height: calc(var(--seq-scroll, 250) * 0.84vh); }
     .seq-steps { gap: 10px; }
+    .seq-steps[data-count='4'] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .seq-label { font-size: 0.8125rem; }
     .seq-steps .ref { font-size: 0.75rem; }
   }

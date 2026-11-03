@@ -69,6 +69,8 @@ export interface Sequence {
   /** Describes the finished last frame, which is what readers without animation see. */
   alt: string;
   note: string;
+  /** How long the animation lasts, as a share of the screen height. 250 when not set. */
+  scroll?: number;
   /**
    * What happens over the scroll, with the stretch of it each step takes, from 0 to 1.
    * These must match the schedule the frames were rendered with.
@@ -489,15 +491,7 @@ export const projects: Project[] = [
       ],
       edges: [['remote', 'tx'], ['tx', 'rx'], ['rx', 'step'], ['step', 'knob']],
     },
-    // TODO: add a photo of the handheld remote and its PCB, and footage of the knob turning, when you have them.
     media: [
-      {
-        type: 'image',
-        src: 'projects/volume-remote/setup.jpg',
-        alt: 'A stereo receiver on a wooden desk with a black 3D-printed motor mount fitted over its volume knob, and a grey box beside it',
-        caption: 'The motor mount fitted over the receiver’s volume knob',
-        ratio: '16/9',
-      },
       {
         type: 'image',
         src: 'projects/volume-remote/render.jpg',
@@ -511,15 +505,17 @@ export const projects: Project[] = [
       {
         id: 'design',
         src: '/sequences/volume-remote/',
-        frames: 90,
+        frames: 120,
+        scroll: 360,
         heading: 'DESIGN',
-        intro: 'The receiver and the motor mount, modelled in Blender from a photo of the real setup. Scroll to watch the stepper turn the volume knob.',
+        intro: 'The receiver and the motor mount, modelled in Blender from a photo of the real setup. Scroll to take it apart, then watch the stepper turn the volume knob.',
         alt: 'Render of the receiver with the black motor mount over its volume knob, the display reading -20.0 dB, and wires running to a grey box beside it',
         note: 'Rendered in Blender from a photo, so sizes are estimates. The receiver is shown without its branding.',
         steps: [
-          { label: 'Receiver', detail: 'Unmodified', from: 0, to: 0.28 },
-          { label: 'Motor mount', detail: 'Stepper and knob coupler', from: 0.3, to: 0.6 },
-          { label: 'Volume', detail: 'Turned by the stepper', from: 0.6, to: 0.97 },
+          { label: 'Knob attachment', detail: 'Slides over the volume knob', from: 0.14, to: 0.3 },
+          { label: 'Stepper motor', detail: 'Turns the attachment', from: 0.3, to: 0.48 },
+          { label: 'ESP32', detail: 'In the box, taking the remote’s commands', from: 0.54, to: 0.72 },
+          { label: 'Volume', detail: 'Turned from across the room', from: 0.84, to: 0.99 },
         ],
       },
     ],

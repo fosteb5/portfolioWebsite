@@ -24,6 +24,8 @@ Thumbs.db
 *.blend1
 # a packaged Electron build,
 /Projects/testing/dist-electron/
+# a photo of the volume remote setup the user wants kept off GitHub (the .blend was modelled from it),
+/Projects/VolumeRemote/setup-photo.jpg
 # and application forms that list teammates' and staff contact details.
 /Projects/SolarBlimp/Application/Thompson Fund Application.docx
 /Projects/Burbon Dispencer/Application.pdf

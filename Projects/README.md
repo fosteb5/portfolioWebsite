@@ -16,7 +16,7 @@ The blimp's firmware and team website are in [fosteb5/LiftLabs](https://github.c
 
 ## VolumeRemote
 
-- `Blender/volume-remote.blend`: the receiver and the motor mount, modelled from `setup-photo.jpg`, so sizes are estimates. The `VR_render.py` text block holds `render_web()` for the site's scroll animation, where the stepper turns the knob and the display counts up, and `render_loop()` for the video.
+- `Blender/volume-remote.blend`: the receiver and the motor mount, modelled from a photo of the real setup, so sizes are estimates. The `VR_render.py` text block holds `render_web()` for the site's scroll animation, which breaks out the knob attachment, the stepper motor and the ESP32 in the grey box before the stepper turns the knob, and `render_loop()` for the video.
 - `Blender/renders/`: `volume-remote-loop.mp4` (an 8 second loop) and `volume-remote-hero.jpg`.
 
 ## Other folders
