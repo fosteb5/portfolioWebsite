@@ -2,6 +2,7 @@
 import Diagram from '../../components/Diagram.astro';
 import Media from '../../components/Media.astro';
 import PadLink from '../../components/PadLink.astro';
+import Sequence from '../../components/Sequence.astro';
 import TraceText from '../../components/TraceText.astro';
 import { projects, site, type Project } from '../../content';
 import Base from '../../layouts/Base.astro';
@@ -38,9 +39,11 @@ const stackTables = [
   { name: 'Software', rows: project.software ?? [] },
 ].filter((table) => table.rows.length);
 
+const sequence = project.sequence;
 const index = [
   { id: 'problem', label: 'Problem' },
   { id: 'approach', label: 'Approach' },
+  ...(sequence ? [{ id: 'parts', label: sequence.heading.charAt(0) + sequence.heading.slice(1).toLowerCase() }] : []),
   { id: 'stack', label: 'Stack' },
   { id: 'results', label: 'Results' },
 ];
@@ -100,6 +103,14 @@ const index = [
             </div>
             {inline.map((media) => <Media media={media} class="case-figure" />)}
           </section>
+
+          {sequence && (
+            <section id="parts" class="case-sec" data-case-sec>
+              <TraceText text={sequence.heading} class="case-h" />
+              <p class="case-text">{sequence.intro}</p>
+              <Sequence sequence={sequence} board={project.board} />
+            </section>
+          )}
 
           <section id="stack" class="case-sec" data-case-sec>
             <TraceText text="STACK" class="case-h" />

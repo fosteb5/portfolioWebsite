@@ -12,6 +12,8 @@
  * A project with no photo yet shows its system diagram there instead.
  * Videos: put them in public/video/ and set `src`, for example
  *   src: '/video/liftlabs-flight.mp4'
+ * Scroll animations: rendered frames live in public/sequences/<name>/, one
+ * folder per width (1280 and 720), named 001.webp, 002.webp and so on.
  */
 
 /* ------------------------------------------------------------------ */
@@ -54,6 +56,24 @@ export interface Diagram {
   edges: [string, string][];
 }
 
+/** A rendered animation that plays as the reader scrolls. */
+export interface Sequence {
+  /** Folder in public/ that holds the 1280 and 720 frame folders. Ends with a slash. */
+  src: string;
+  frames: number;
+  /** Lettered in copper traces as the section heading, and used for its link in the page index. */
+  heading: string;
+  intro: string;
+  /** Describes the finished last frame, which is what readers without animation see. */
+  alt: string;
+  note: string;
+  /**
+   * What happens over the scroll, with the stretch of it each step takes, from 0 to 1.
+   * These must match the schedule the frames were rendered with.
+   */
+  steps: { label: string; detail: string; from: number; to: number }[];
+}
+
 export interface StackItem {
   /** What the part does. */
   area: string;
@@ -94,6 +114,7 @@ export interface Project {
   metrics: { label: string; value: string }[];
   diagram: Diagram;
   media: Media[];
+  sequence?: Sequence;
 }
 
 /* ------------------------------------------------------------------ */
@@ -218,19 +239,58 @@ export const projects: Project[] = [
       ],
       edges: [['solar', 'charge'], ['charge', 'esp'], ['gps', 'esp'], ['alt', 'esp'], ['gyro', 'esp'], ['esp', 'motor'], ['motor', 'thrust']],
     },
+    // TODO: add a PCB close-up or flight footage here when you have them.
     media: [
-      // TODO: swap in a photo of the real blimp when you have one. This render comes from liftlabs.ca.
+      {
+        type: 'image',
+        src: 'projects/liftlabs/build-space.jpg',
+        alt: 'The inflated blimp envelope with its purple fin beside a workbench, with a solar panel on the table and a 3D printer behind',
+        caption: 'The envelope inflated beside the build bench, with one of the solar panels and the 3D printer',
+        ratio: '16/9',
+      },
+      {
+        type: 'image',
+        src: 'projects/liftlabs/envelope.jpg',
+        alt: 'The dark grey blimp envelope with purple inflatable fins, tethered indoors',
+        caption: 'The 13 ft PVC envelope, inflated and tethered indoors',
+        ratio: '4/3',
+      },
+      {
+        type: 'image',
+        src: 'projects/liftlabs/solar-panel.jpg',
+        alt: 'A flexible monocrystalline solar panel standing against a wall',
+        caption: 'One of the four 100 W flexible solar panels',
+        ratio: '4/3',
+      },
+      {
+        type: 'image',
+        src: 'projects/liftlabs/motor-esc.jpg',
+        alt: 'A blue brushless outrunner motor wired to an 80 A brushless ESC on a wooden table',
+        caption: 'A drive motor and its 80 A brushless ESC',
+        ratio: '3/2',
+      },
       {
         type: 'image',
         src: 'projects/liftlabs/blimp.jpg',
         alt: 'Concept render of the LiftLabs blimp, with a solar array along its top and a propulsion pod underneath',
-        caption: 'Concept render of the blimp, from liftlabs.ca',
+        caption: 'Concept render of the finished design, from liftlabs.ca',
         ratio: '16/9',
       },
-      { type: 'image', src: '', alt: 'The LiftLabs blimp in flight', caption: 'The blimp in flight', ratio: '16/9' },
-      { type: 'image', src: '', alt: 'A LiftLabs custom PCB', caption: 'Custom PCB close-up', ratio: '3/2' },
-      { type: 'video', src: '', poster: '', alt: 'Thrust-vectoring test', caption: 'Thrust-vectoring test', ratio: '16/9' },
     ],
+    // Rendered in Blender from Projects/SolarBlimp/Blender/liftlabs-print.blend. The step timings match its LL_render.py.
+    sequence: {
+      src: '/sequences/liftlabs-print/',
+      frames: 72,
+      heading: 'PARTS',
+      intro: 'Three of the blimp’s parts from the SolidWorks model, rendered in Blender from their STL exports. Scroll to print them layer by layer.',
+      alt: 'Render of the motor-to-servo mount, the mounting plate with Lift Labs cut into its face, and the GPS enclosure, all printed in purple plastic',
+      note: 'Rendered in Blender. The colour and print order are for illustration.',
+      steps: [
+        { label: 'Motor-to-servo mount', detail: '60 × 60 × 30 mm', from: 0.05, to: 0.37 },
+        { label: 'Mounting plate', detail: '305 × 181 × 20 mm', from: 0.33, to: 0.65 },
+        { label: 'GPS enclosure', detail: '100 × 50 × 20 mm', from: 0.61, to: 0.93 },
+      ],
+    },
   },
   {
     slug: 'tethered-drone',
