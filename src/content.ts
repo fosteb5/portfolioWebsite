@@ -8,6 +8,8 @@
  *
  * Photos: put them in src/assets/projects/<slug>/ and set `src`, for example
  *   src: 'projects/liftlabs/first-flight.jpg'
+ * The first photo in a project's `media` is also its picture on the home page.
+ * A project with no photo yet shows its system diagram there instead.
  * Videos: put them in public/video/ and set `src`, for example
  *   src: '/video/liftlabs-flight.mp4'
  */
@@ -76,6 +78,7 @@ export interface Project {
   where?: string;
   status?: string;
   tags: string[];
+  /** Shown as buttons on the home page card and the case study. Opens in a new tab. */
   links?: LinkItem[];
   problem: string[];
   approach: string[];
@@ -175,7 +178,10 @@ export const projects: Project[] = [
     when: 'Sept 2024 to present',
     where: 'London, ON',
     tags: ['Custom PCBs', 'ESP32', 'Solar charging', 'Thrust vectoring', 'SolidWorks'],
-    links: [{ label: 'liftlabs.ca', href: 'https://liftlabs.ca' }],
+    links: [
+      { label: 'liftlabs.ca', href: 'https://liftlabs.ca' },
+      { label: 'Firmware on GitHub', href: 'https://github.com/fosteb5/LiftLabs' },
+    ],
     // TODO: confirm this framing of the problem. It is written from your résumé.
     problem: [
       'An autonomous airship has to live on the power it collects. Solar charging, sensing, propulsion and control all have to work together on one airframe.',
@@ -213,6 +219,14 @@ export const projects: Project[] = [
       edges: [['solar', 'charge'], ['charge', 'esp'], ['gps', 'esp'], ['alt', 'esp'], ['gyro', 'esp'], ['esp', 'motor'], ['motor', 'thrust']],
     },
     media: [
+      // TODO: swap in a photo of the real blimp when you have one. This render comes from liftlabs.ca.
+      {
+        type: 'image',
+        src: 'projects/liftlabs/blimp.jpg',
+        alt: 'Concept render of the LiftLabs blimp, with a solar array along its top and a propulsion pod underneath',
+        caption: 'Concept render of the blimp, from liftlabs.ca',
+        ratio: '16/9',
+      },
       { type: 'image', src: '', alt: 'The LiftLabs blimp in flight', caption: 'The blimp in flight', ratio: '16/9' },
       { type: 'image', src: '', alt: 'A LiftLabs custom PCB', caption: 'Custom PCB close-up', ratio: '3/2' },
       { type: 'video', src: '', poster: '', alt: 'Thrust-vectoring test', caption: 'Thrust-vectoring test', ratio: '16/9' },
@@ -443,7 +457,13 @@ export const projects: Project[] = [
       edges: [['sellers', 'site'], ['buyers', 'site'], ['site', 'files'], ['site', 'stripe'], ['stripe', 'tax']],
     },
     media: [
-      { type: 'image', src: '', alt: 'The Copyroom home page', caption: 'The Copyroom storefront', ratio: '16/9' },
+      {
+        type: 'image',
+        src: 'projects/copyroom/storefront.jpg',
+        alt: 'The Copyroom home page, with a resource search box and the headline: Classroom resources from Canadian teachers, for Canadian classrooms',
+        caption: 'The Copyroom storefront, November 2026',
+        ratio: '16/9',
+      },
       { type: 'image', src: '', alt: 'A Copyroom seller dashboard', caption: 'Seller view', ratio: '3/2' },
     ],
   },

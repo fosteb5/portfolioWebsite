@@ -141,45 +141,59 @@ export function initHome(onSettled: () => void) {
     if (!desktop) return;
 
     view.classList.add('is-pinned');
-    const distance = () => track.scrollWidth - document.documentElement.clientWidth;
-    const slide = gsap.to(track, {
-      x: () => -distance(),
-      ease: 'none',
+
+    /*
+     * The rail steps rather than slides: each card travels in, then holds centred for a stretch of scroll.
+     * Timeline units: a lead-in on the intro, then MOVE + HOLD per card. SCROLL is viewport heights per unit.
+     */
+    const LEAD = 0.3;
+    const MOVE = 1;
+    const HOLD = 0.7;
+    const SCROLL = 0.55;
+    const SHIFT = 26;
+    const units = LEAD + modules.length * (MOVE + HOLD);
+    const centre = (module: HTMLElement) => -(module.offsetLeft + module.offsetWidth / 2 - document.documentElement.clientWidth / 2);
+    const arts = modules.map((module) => module.querySelector('[data-module-art]'));
+
+    const rail = gsap.timeline({
+      defaults: { ease: 'power2.inOut', duration: MOVE },
       scrollTrigger: {
         trigger: section,
         pin: true,
         start: 'top top',
-        end: () => `+=${distance()}`,
+        end: () => `+=${units * SCROLL * window.innerHeight}`,
         scrub: true,
         invalidateOnRefresh: true,
+        // The clipped rail hides later photos from lazy loading until they slide in, so fetch them all on arrival.
+        onToggle: () => section.querySelectorAll('img').forEach((img) => (img.loading = 'eager')),
       },
     });
 
-    modules.forEach((module) => {
-      gsap.fromTo(module.querySelector('[data-module-art]'), { x: 26 }, {
-        x: -26,
-        ease: 'none',
-        scrollTrigger: { trigger: module, containerAnimation: slide, start: 'left right', end: 'right left', scrub: true },
-      });
+    gsap.set(arts, { x: SHIFT });
+    modules.forEach((module, i) => {
+      const at = LEAD + i * (MOVE + HOLD);
+      rail.to(track, { x: () => centre(module) }, at);
+      // Parallax: the picture behind each window lags the board it sits in.
+      rail.to(arts[i], { x: 0 }, at);
+      if (i > 0) rail.to(arts[i - 1], { x: -SHIFT }, at);
+      rail.addLabel(`card${i}`, at + MOVE);
       const name = module.querySelector('.module-name');
       if (name) {
-        gsap.timeline({
-          scrollTrigger: { trigger: module, containerAnimation: slide, start: 'left 78%', toggleActions: 'play none none none' },
-        }).add(drawTrace(name, 0.8));
+        const draw = drawTrace(name, 0.8).pause();
+        rail.call(() => void draw.play(), undefined, at + MOVE * 0.4);
       }
     });
+    rail.to({}, { duration: HOLD });
 
     /* Keyboard users land on a card the rail has moved off screen, so bring it into view. */
     section.addEventListener('focusin', (e) => {
       const target = e.target as Element;
       const module = target.closest<HTMLElement>('[data-module]');
-      const st = slide.scrollTrigger;
+      const st = rail.scrollTrigger;
       // Only keyboard focus moves the rail. A mouse press must never pull a link out from under the pointer.
       if (!module || !st || !target.matches(':focus-visible')) return;
       view.scrollLeft = 0;
-      const span = distance();
-      const left = module.offsetLeft - (document.documentElement.clientWidth - module.offsetWidth) / 2;
-      const progress = gsap.utils.clamp(0, 1, left / span);
+      const progress = rail.labels[`card${modules.indexOf(module)}`] / rail.duration();
       getLenis()?.scrollTo(st.start + (st.end - st.start) * progress, { immediate: true, force: true });
     });
 

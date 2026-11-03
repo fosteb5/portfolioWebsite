@@ -135,7 +135,11 @@ const index = [
             {project.links && (
               <div class="case-links">
                 {project.links.map((link) => (
-                  <PadLink href={link.href} variant="ghost" target="_blank" rel="noreferrer">Visit {link.label}</PadLink>
+                  <PadLink href={link.href} variant="ghost" target="_blank" rel="noreferrer">
+                    {link.label}
+                    <svg class="out-arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4.5 3H9v4.5" /></svg>
+                    <span class="sr-only">(opens in a new tab)</span>
+                  </PadLink>
                 ))}
               </div>
             )}
@@ -222,6 +226,7 @@ const index = [
   .case-metrics dd { margin: 4px 0 0; font-size: clamp(1.75rem, 3vw, 2.75rem); font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
   .case-todo { margin: 24px 0 0; padding: 10px 14px; background: #ffe7e0; color: #7a1a00; font-size: 0.875rem; }
   .case-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .out-arrow { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
   .case-closing { margin-top: clamp(72px, 10vw, 140px); }
 
   .next-board { display: block; position: relative; z-index: 1; background: var(--mask); color: var(--silk); text-decoration: none; }
