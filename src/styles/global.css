@@ -1,0 +1,293 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+@import "@fontsource/b612/latin-400.css";
+@import "@fontsource/b612/latin-700.css";
+@import "@fontsource/b612-mono/latin-400.css";
+@import "@fontsource/b612-mono/latin-700.css";
+
+/* Colours are runtime variables so any section can become a different board. */
+@theme inline {
+  --color-mask: var(--mask);
+  --color-void: var(--void);
+  --color-cu: var(--cu);
+  --color-trace: var(--trace);
+  --color-silk: var(--silk);
+  --color-silk-dim: var(--silk-dim);
+  --color-accent: var(--accent);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --font-sans: "B612", Verdana, "DejaVu Sans", system-ui, sans-serif;
+  --font-mono: "B612 Mono", ui-monospace, Consolas, monospace;
+}
+
+:root {
+  --mask: #0C4A3A;
+  --void: #04241C;
+  --cu: #1C8267;
+  --trace: #E2B65A;
+  --on-trace: #08201A;
+  --silk: #F3F5EE;
+  --silk-dim: #BFD3CA;
+  --accent: #0C4A3A;
+  --paper: #F3F5EE;
+  --ink: #08201A;
+  --ink-dim: #3D4F48;
+
+  --gutter: clamp(20px, 5vw, 72px);
+  --nav-h: 64px;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* z-index scale: content, nav, overlay, cursor */
+  --z-nav: 40;
+  --z-menu: 50;
+  --z-via: 60;
+  --z-cursor: 70;
+
+  color-scheme: dark;
+}
+
+/* Every outline on the site is octilinear, like a board edge. */
+.chamfer,
+.pad::before,
+.pad-ghost::after {
+  --c: 10px;
+  clip-path: polygon(
+    var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)),
+    calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c)
+  );
+}
+
+html {
+  background: var(--mask);
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-block-start: calc(var(--nav-h) + 24px);
+  scrollbar-color: var(--cu) var(--void);
+}
+
+body {
+  margin: 0;
+  background: var(--mask);
+  color: var(--silk);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--trace);
+  color: var(--on-trace);
+}
+
+:focus-visible {
+  outline: 2px solid var(--trace);
+  outline-offset: 3px;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: var(--z-cursor);
+  padding: 10px 16px;
+  background: var(--trace);
+  color: var(--on-trace);
+  font-weight: 700;
+  transform: translateY(-200%);
+  transition: transform 160ms var(--ease-out);
+}
+.skip-link:focus { transform: none; }
+
+.wrap {
+  width: 100%;
+  max-width: 1560px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Trace lettering. 1em equals the cap height of the letters. */
+.trace {
+  margin: 0;
+  font-size: var(--trace-size, clamp(2.1rem, 6.2vw, 5.6rem));
+  font-weight: 400;
+  line-height: 1;
+  color: var(--trace);
+}
+.trace-art { display: flex; flex-direction: column; gap: 0.42em; }
+.trace-line { display: flex; flex-wrap: wrap; gap: 0.42em 0.62em; }
+.trace-word { display: block; height: var(--word-h); aspect-ratio: var(--word-ar); overflow: visible; margin-top: var(--word-lift, 0); }
+.trace-word path,
+.trace-word circle { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.tr { stroke: currentColor; stroke-width: 0.66; }
+.tr-pad { stroke: currentColor; stroke-width: 0.34; }
+.tr-halo path { stroke: var(--void); stroke-width: 1.4; }
+.tr-halo circle { stroke: var(--void); stroke-width: 1.15; }
+
+/* Buttons are gold pads. */
+.pad {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 52px;
+  padding: 0 1.55rem;
+  color: var(--on-trace);
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  will-change: transform;
+}
+.pad::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(112deg, var(--trace) 42%, color-mix(in oklab, var(--trace), white 46%) 50%, var(--trace) 58%);
+  background-size: 320% 100%;
+  background-position: 100% 0;
+  transition: background-position 520ms var(--ease-out), transform 140ms var(--ease-out);
+}
+.pad:active::before { transform: scale(0.97); }
+
+.pad-ghost { color: var(--silk); }
+.pad-ghost::after {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  z-index: -1;
+  background: var(--mask);
+  transition: opacity 180ms ease;
+}
+
+.link {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  text-decoration: none;
+  transition: background-size 240ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pad:hover::before { background-position: 0 0; }
+  .pad-ghost:hover { color: var(--on-trace); }
+  .pad-ghost:hover::after { opacity: 0; }
+  .link:hover { background-size: 100% 1px; }
+}
+
+/* Small reference designators: on a board, this is what mono type is for. */
+.ref {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+  color: var(--silk-dim);
+}
+
+.section {
+  position: relative;
+  padding-block: clamp(84px, 13vw, 190px);
+}
+
+/* The route that runs through the page. Drawn by src/scripts/net.ts */
+.net {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0;
+}
+.net path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.net .net-base { stroke: var(--cu); stroke-width: 3; opacity: 0.6; }
+.net .net-live { stroke: var(--trace); stroke-width: 3; stroke-linecap: butt; stroke-dasharray: 1; stroke-dashoffset: 0; }
+
+.lift { position: relative; z-index: 1; }
+
+/* The lamp: a soft pool of light under the content, and a ring that replaces the pointer. */
+#lamp {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 900px;
+  height: 900px;
+  margin: -450px 0 0 -450px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--cu) 46%, transparent), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  will-change: transform;
+}
+html[data-lamp] #lamp { opacity: 0.55; }
+
+#cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  opacity: 0;
+}
+html.has-cursor #cursor { opacity: 1; }
+html.has-cursor,
+html.has-cursor * { cursor: none !important; }
+.cursor-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: var(--trace);
+  will-change: transform;
+}
+.cursor-ring {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border: 1.5px solid var(--trace);
+  border-radius: 50%;
+  will-change: transform;
+}
+
+/* The via: a full-screen hole that carries you to the next layer. */
+#via {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-via);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* If a script never runs, nothing stays hidden. */
+html.js .await-motion .trace-art { visibility: hidden; animation: failsafe 0s 3.5s forwards; }
+@keyframes failsafe { to { visibility: visible; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .await-motion .trace-art { visibility: visible; animation: none; }
+  .pad::before, .pad-ghost::after, .link, .skip-link { transition: none; }
+}
+
+/* WebGL board. Fades in over the plain ground once it is ready. */
+.board-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 900ms ease;
+}
+.board-canvas[data-ready] { opacity: 1; }
+
+.rail-view.is-pinned { overflow: clip; scroll-snap-type: none; }

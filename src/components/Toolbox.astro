@@ -1,0 +1,74 @@
+---
+import { toolbox } from '../content';
+import TraceText from './TraceText.astro';
+
+const PINS = 15;
+const pins = Array.from({ length: PINS }, (_, i) => i);
+const [first, ...rest] = toolbox.chipLabel.split(' ');
+---
+
+<section class="toolbox section" id="toolbox" aria-labelledby="toolbox-title">
+  <svg class="net" data-net aria-hidden="true"></svg>
+  <div class="wrap lift">
+    <div class="tb-head">
+      <TraceText id="toolbox-title" text={toolbox.heading} class="tb-title" />
+      <svg class="chip" viewBox="0 0 400 214" aria-hidden="true" data-chip>
+        {pins.map((i) => <rect class="chip-pin" x={38 + i * 23} y="0" width="11" height="20" />)}
+        {pins.map((i) => <rect class="chip-pin" data-pin={i} x={38 + i * 23} y="194" width="11" height="20" />)}
+        <path class="chip-body" d="M22 16H378L392 30V184L378 198H22L8 184V30Z" />
+        <circle class="chip-dot" cx="38" cy="46" r="7" />
+        <text class="chip-ref" x="372" y="52" text-anchor="end">U1</text>
+        <text class="chip-name" x="36" y="122">{first}</text>
+        <text class="chip-name" x="36" y="164">{rest.join(' ')}</text>
+      </svg>
+    </div>
+
+    <svg class="fan" data-fan aria-hidden="true"></svg>
+
+    <ul class="tb-groups">
+      {toolbox.groups.map((group) => (
+        <li class="tb-group" data-group>
+          <span class="tb-pad" data-group-pad aria-hidden="true"></span>
+          <h3>{group.name}</h3>
+          <ul>
+            {group.items.map((item) => <li>{item}</li>)}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .toolbox { overflow: clip; }
+  .tb-head { position: relative; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; }
+  .tb-head :global(.tb-title) { --trace-size: clamp(2.1rem, 4.6vw, 4.25rem); }
+  .chip { display: block; width: clamp(240px, 27vw, 400px); height: auto; overflow: visible; }
+  .chip-pin { fill: var(--trace); }
+  .chip-body { fill: var(--void); stroke: var(--silk-dim); stroke-width: 1.25; }
+  .chip-dot { fill: var(--silk); }
+  .chip-ref { fill: var(--silk-dim); font: 400 18px var(--font-mono); }
+  .chip-name { fill: var(--silk); font: 700 34px var(--font-sans); }
+
+  .fan { display: block; width: 100%; height: clamp(72px, 9vw, 120px); overflow: visible; }
+  :global(.fan path) { fill: none; stroke: var(--trace); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  .tb-groups { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(20px, 2.6vw, 40px); margin: 0; padding: 0; list-style: none; }
+  .tb-group { position: relative; min-width: 0; }
+  .tb-pad { display: block; width: 18px; height: 18px; margin-bottom: 14px; border: 3.5px solid var(--trace); border-radius: 50%; background: var(--mask); }
+  .tb-group h3 { margin: 0 0 12px; font-size: clamp(1.0625rem, 1.4vw, 1.25rem); line-height: 1.2; font-weight: 700; color: var(--trace); }
+  .tb-group ul { display: grid; gap: 5px; margin: 0; padding: 0; list-style: none; font-size: 0.9375rem; line-height: 1.35; color: var(--silk); }
+
+  @media (max-width: 1023px) {
+    .tb-head { grid-template-columns: 1fr; justify-items: start; gap: 28px; }
+    .chip { width: min(100%, 320px); }
+    .fan { display: none; }
+    .tb-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 24px; margin-top: 40px; }
+  }
+  @media (max-width: 560px) {
+    .tb-groups { grid-template-columns: 1fr; }
+    .tb-group { padding-left: 34px; }
+    .tb-pad { position: absolute; left: 0; top: 2px; margin: 0; }
+    .tb-group ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 16px; }
+  }
+</style>

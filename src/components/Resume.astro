@@ -1,0 +1,59 @@
+---
+import { resume } from '../content';
+import TraceText from './TraceText.astro';
+---
+
+<section class="resume section" id="resume" aria-labelledby="resume-title">
+  <svg class="net" data-net aria-hidden="true"></svg>
+  <div class="wrap lift resume-inner">
+    <div>
+      <TraceText id="resume-title" text={resume.heading} class="resume-title" data-reveal-trace />
+      <p class="resume-blurb">{resume.blurb}</p>
+    </div>
+    <a class="test-point" href={resume.href} download data-magnetic data-test-point>
+      <span class="tp-label">{resume.label}</span>
+      <span class="tp-meta">{resume.meta}</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .resume-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px; }
+  .resume-inner :global(.resume-title) { --trace-size: clamp(2.1rem, 4.6vw, 4.25rem); }
+  .resume-blurb { margin: 18px 0 0; max-width: 26em; color: var(--silk-dim); font-size: clamp(1rem, 1.3vw, 1.1875rem); text-wrap: pretty; }
+
+  /* TP1: the one large round pad on the board. */
+  .test-point {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 4px;
+    flex: none;
+    width: clamp(196px, 22vw, 280px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--trace);
+    color: var(--on-trace);
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 0 0 clamp(6px, 0.8vw, 10px) var(--void);
+    will-change: transform;
+  }
+  .test-point::before {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    z-index: -1;
+    border-radius: 50%;
+    border: 1.5px solid color-mix(in srgb, var(--on-trace) 40%, transparent);
+    transition: inset 260ms var(--ease-out);
+  }
+  .tp-label { font-weight: 700; font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); line-height: 1.15; max-width: 8em; }
+  .tp-meta { font-family: var(--font-mono); font-size: 0.8125rem; }
+  @media (hover: hover) and (pointer: fine) {
+    .test-point:hover::before { inset: 18px; }
+  }
+  .test-point:focus-visible { outline-offset: 12px; }
+</style>

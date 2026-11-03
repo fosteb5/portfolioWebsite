@@ -1,0 +1,22 @@
+---
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+import Experience from '../components/Experience.astro';
+import Hero from '../components/Hero.astro';
+import Resume from '../components/Resume.astro';
+import Toolbox from '../components/Toolbox.astro';
+import Work from '../components/Work.astro';
+import Base from '../layouts/Base.astro';
+---
+
+<Base page="home">
+  <main id="main">
+    <Hero />
+    <About />
+    <Work />
+    <Toolbox />
+    <Experience />
+    <Resume />
+    <Contact />
+  </main>
+</Base>

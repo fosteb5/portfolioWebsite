@@ -1,0 +1,111 @@
+---
+import { contact, nav } from '../content';
+import PadLink from './PadLink.astro';
+import { layoutWord, strokePath } from '../lib/trace-font';
+
+const mark = layoutWord('FB');
+---
+
+<header class="site-nav" id="site-nav">
+  <a class="site-mark" href="/" aria-label="Foster Beard, home">
+    <svg viewBox={`-0.8 -0.8 ${mark.width + 1.6} 7.6`} aria-hidden="true">
+      {mark.glyphs.map((glyph) => (
+        <g>
+          {glyph.strokes.map((stroke) => <path class="tr" d={strokePath(stroke)} />)}
+          {glyph.pads.map(([x, y]) => <circle class="tr-pad" cx={x} cy={y} r="0.4" />)}
+        </g>
+      ))}
+    </svg>
+  </a>
+
+  <nav aria-label="Main" class="site-links">
+    <ul>
+      {nav.map((item) => <li><a class="link" href={item.href}>{item.label}</a></li>)}
+    </ul>
+  </nav>
+
+  <PadLink class="site-cta" href="/#contact">Get in touch</PadLink>
+
+  <button class="menu-open" type="button" id="menu-open" aria-haspopup="dialog" aria-controls="menu">Menu</button>
+</header>
+
+<dialog class="menu" id="menu" aria-label="Site menu">
+  <div class="menu-head">
+    <span class="ref">Menu</span>
+    <button class="menu-close" type="button" id="menu-close">Close</button>
+  </div>
+  <nav aria-label="Menu">
+    <ul>
+      {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      <li><a href="/#contact">Get in touch</a></li>
+    </ul>
+  </nav>
+  <p class="menu-foot"><a href={contact.links[0].href}>{contact.links[0].value}</a></p>
+</dialog>
+
+<style>
+  .site-nav {
+    position: fixed;
+    top: 14px;
+    left: max(var(--gutter), calc(50% - 780px + var(--gutter)));
+    right: max(var(--gutter), calc(50% - 780px + var(--gutter)));
+    z-index: var(--z-nav);
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 2.4vw, 36px);
+    height: var(--nav-h);
+    padding-inline: 18px 8px;
+    background: color-mix(in srgb, var(--void) 95%, transparent);
+    color: var(--silk);
+    --c: 12px;
+    clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
+    transition: transform 320ms var(--ease-out);
+  }
+  .site-nav[data-hidden] { transform: translateY(calc(-100% - 20px)); }
+  .site-nav:focus-within { transform: none; }
+
+  .site-mark { display: block; color: var(--trace); padding: 8px 6px; margin-right: auto; }
+  .site-mark svg { display: block; height: 30px; width: auto; overflow: visible; }
+  .site-mark path, .site-mark circle { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+  .site-links ul { display: flex; gap: clamp(16px, 2.2vw, 32px); margin: 0; padding: 0; list-style: none; }
+  .site-links a { padding-block: 6px; font-size: 0.9375rem; white-space: nowrap; }
+
+  .site-cta { min-height: 46px; padding-inline: 1.15rem; font-size: 0.9375rem; }
+
+  .menu-open, .menu-close {
+    min-height: 46px;
+    padding: 0 16px;
+    border: 0;
+    background: var(--trace);
+    color: var(--on-trace);
+    font: 700 0.9375rem/1 var(--font-sans);
+    --c: 8px;
+    clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
+  }
+  .menu-open { display: none; }
+
+  .menu {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 18px var(--gutter) 32px;
+    border: 0;
+    background: var(--void);
+    color: var(--silk);
+  }
+  .menu[open] { display: flex; flex-direction: column; }
+  .menu::backdrop { background: var(--void); }
+  .menu-head { display: flex; justify-content: space-between; align-items: center; min-height: 60px; }
+  .menu nav { margin-block: auto; }
+  .menu ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .menu ul a { display: block; padding-block: 10px; font-size: clamp(2rem, 9vw, 3rem); font-weight: 700; line-height: 1.15; text-decoration: none; }
+  .menu-foot { margin: 0; color: var(--silk-dim); overflow-wrap: anywhere; }
+
+  @media (max-width: 860px) {
+    .site-links, .site-cta { display: none; }
+    .menu-open { display: block; }
+  }
+</style>

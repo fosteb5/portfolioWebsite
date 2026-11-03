@@ -1,0 +1,133 @@
+---
+import { experience } from '../content';
+import TraceText from './TraceText.astro';
+
+const { timelineStart: start, timelineEnd: end, signals, next } = experience;
+
+const today = new Date();
+const now = today.getFullYear() + today.getMonth() / 12;
+const x = (t: number) => ((Math.min(t, end) - start) / (end - start)) * 1000;
+
+const LOW = 34;
+const HIGH = 7;
+
+/** Solid up to today. A planned end, like a graduation date, continues as a dashed line. */
+function wave(spans: readonly (readonly [number, number | null])[]) {
+  let line = `M0 ${LOW}`;
+  let area = '';
+  let planned = '';
+  let high = false;
+  for (const [from, to] of spans) {
+    const a = x(from);
+    const end = to ?? now;
+    const b = x(Math.min(end, now));
+    area += `M${a.toFixed(1)} ${LOW}V${HIGH}H${b.toFixed(1)}V${LOW}Z`;
+    line += `H${a.toFixed(1)}V${HIGH}H${b.toFixed(1)}`;
+    high = to === null || end >= now;
+    if (end > now) planned = `M${b.toFixed(1)} ${HIGH}H${x(end).toFixed(1)}V${LOW}`;
+    if (!high) line += `V${LOW}`;
+  }
+  if (!high) line += `H${x(now).toFixed(1)}`;
+  return { line, area, planned };
+}
+
+const years = Array.from({ length: Math.floor(end - start) + 1 }, (_, i) => start + i);
+const pct = (t: number) => `${(x(t) / 10).toFixed(2)}%`;
+const nextX = x(next.start);
+---
+
+<section class="experience section" id="experience" aria-labelledby="experience-title">
+  <svg class="net" data-net aria-hidden="true"></svg>
+  <div class="wrap lift">
+    <TraceText id="experience-title" text={experience.heading} class="xp-title" data-reveal-trace />
+    <p class="xp-intro">{experience.intro}</p>
+
+    <div class="xp-chart" data-xp style={`--now:${pct(now)}`}>
+      <div class="xp-grid" aria-hidden="true">
+        {years.map((year) => <span class="xp-year" style={`left:${pct(year)}`}><b>{year}</b></span>)}
+        <span class="xp-now" data-xp-now><b>Now</b></span>
+      </div>
+
+      <ol class="xp-rows">
+        {signals.map((signal) => {
+          const { line, area, planned } = wave(signal.spans);
+          return (
+            <li class="sig" data-sig>
+              <div class="sig-text">
+                <h3>{signal.role}</h3>
+                <p class="sig-org">{signal.org}</p>
+                <p class="ref">{signal.dates}, {signal.where}</p>
+                <p class="sig-detail">{signal.detail}</p>
+              </div>
+              <svg class="sig-wave" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true" data-wave>
+                <path class="sig-area" d={area} />
+                <path class="sig-line" d={line} />
+                {planned && <path class="sig-line sig-planned" d={planned} />}
+              </svg>
+            </li>
+          );
+        })}
+        <li class="sig sig-next" data-sig>
+          <div class="sig-text">
+            <h3>{next.role}</h3>
+            <p class="ref">{next.dates}</p>
+          </div>
+          <svg class="sig-wave" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true" data-wave>
+            <path class="sig-line sig-planned" d={`M${x(now).toFixed(1)} ${LOW}H${nextX.toFixed(1)}V${HIGH}H1000`} />
+          </svg>
+        </li>
+      </ol>
+    </div>
+
+    <ul class="xp-awards">
+      {experience.recognition.map((item) => <li>{item}</li>)}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .experience { overflow: clip; --label: clamp(300px, 38%, 520px); }
+  .experience :global(.xp-title) { --trace-size: clamp(2.1rem, 4.6vw, 4.25rem); }
+  .xp-intro { margin: 18px 0 0; max-width: 34em; color: var(--silk-dim); font-size: clamp(1rem, 1.3vw, 1.1875rem); text-wrap: pretty; }
+
+  .xp-chart { position: relative; margin-top: clamp(48px, 6vw, 80px); padding-top: 34px; }
+  .xp-grid { position: absolute; inset: 0 0 0 var(--label); pointer-events: none; }
+  .xp-year { position: absolute; top: 0; bottom: 0; border-left: 1px solid color-mix(in srgb, var(--silk-dim) 16%, transparent); }
+  .xp-year b { position: absolute; top: 0; left: 8px; font: 400 0.8125rem/1 var(--font-mono); color: var(--silk-dim); }
+  .xp-now { position: absolute; top: -22px; bottom: 0; left: var(--now); border-left: 1.5px solid var(--trace); }
+  .xp-now b { position: absolute; top: 0; left: 7px; padding-inline: 3px; background: var(--mask); font: 700 0.8125rem/1 var(--font-mono); color: var(--trace); }
+
+  .xp-rows { margin: 0; padding: 0; list-style: none; }
+  .sig { display: grid; grid-template-columns: var(--label) minmax(0, 1fr); align-items: start; padding-block: 18px; }
+  .sig-text { padding-right: 28px; }
+  .sig h3 { margin: 0; font-size: clamp(1.0625rem, 1.3vw, 1.25rem); line-height: 1.25; font-weight: 700; }
+  .sig p { margin: 2px 0 0; }
+  .sig-org { color: var(--trace); font-size: 0.9375rem; }
+  .sig-detail { margin-top: 6px !important; color: var(--silk-dim); font-size: 0.9375rem; line-height: 1.45; max-width: 36em; }
+  .sig-wave { display: block; width: 100%; height: 64px; overflow: visible; }
+  .sig-line { fill: none; stroke: var(--trace); stroke-width: 2.5; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  .sig-area { fill: var(--trace); opacity: 0.14; }
+  .sig-planned { stroke-dasharray: 7 7; }
+
+  .xp-awards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px clamp(24px, 4vw, 64px); margin: clamp(40px, 5vw, 64px) 0 0; padding: 22px 0 0; list-style: none; border-top: 1px solid color-mix(in srgb, var(--silk-dim) 30%, transparent); color: var(--silk-dim); font-size: 0.9375rem; line-height: 1.4; }
+
+  /* On phones the scale moves into each row, so no line ever crosses a sentence. */
+  @media (max-width: 820px) {
+    .experience { --label: 0px; }
+    .xp-chart { padding-top: 0; }
+    .xp-grid { position: relative; inset: auto; height: 42px; }
+    .xp-year { top: 22px; bottom: auto; height: 20px; border-left: 0; }
+    .xp-year b { position: static; font-size: 0.6875rem; }
+    .xp-year:nth-child(even) { display: none; }
+    .xp-now { top: 0; bottom: auto; height: 40px; }
+    .sig { grid-template-columns: 1fr; gap: 10px; padding-block: 20px; }
+    .sig-text { padding-right: 0; }
+    .sig-wave {
+      height: 44px;
+      background:
+        linear-gradient(var(--trace), var(--trace)) var(--now) 0 / 1.5px 100% no-repeat,
+        repeating-linear-gradient(90deg, color-mix(in srgb, var(--silk-dim) 22%, transparent) 0 1px, transparent 1px 12.5%);
+    }
+    .xp-awards { grid-template-columns: 1fr; }
+  }
+</style>

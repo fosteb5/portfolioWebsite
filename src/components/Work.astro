@@ -1,0 +1,144 @@
+---
+import { projects, work } from '../content';
+import { BOARDS, boardStyle } from '../lib/boards';
+import Diagram from './Diagram.astro';
+import PadLink from './PadLink.astro';
+import TraceText from './TraceText.astro';
+---
+
+<section class="rail" id="work" aria-labelledby="work-title">
+  <div class="rail-view" data-rail-view tabindex="-1">
+    <div class="rail-track" data-rail-track>
+      <div class="rail-edge rail-edge-top" aria-hidden="true"></div>
+      <div class="rail-edge rail-edge-bottom" aria-hidden="true"></div>
+
+      <div class="rail-intro">
+        <TraceText id="work-title" text={['FEATURED', 'WORK']} class="rail-title" />
+        <p>{work.intro}</p>
+      </div>
+
+      {
+        projects.map((project, i) => (
+          <>
+            <div class="bites" aria-hidden="true"></div>
+            <article class="module" style={boardStyle(project.board)} data-module>
+              <span class="hole hole-a" aria-hidden="true"></span>
+              <span class="hole hole-b" aria-hidden="true"></span>
+              <span class="hole hole-c" aria-hidden="true"></span>
+              <span class="hole hole-d" aria-hidden="true"></span>
+
+              <div class="module-head">
+                <TraceText as="h3" text={project.traceName} class="module-name" />
+                <div class="module-copy">
+                  <p class="module-summary">{project.summary}</p>
+                  <dl class="module-meta">
+                    <div><dt class="ref">Role</dt><dd>{project.role}</dd></div>
+                    <div><dt class="ref">When</dt><dd>{project.when}</dd></div>
+                  </dl>
+                  <PadLink href={`/work/${project.slug}/`} data-via={BOARDS[project.board].mask}>
+                    {work.cta}<span class="sr-only">: {project.name}</span>
+                  </PadLink>
+                </div>
+              </div>
+
+              <div class="module-art" data-module-art>
+                <Diagram diagram={project.diagram} title={`System diagram for ${project.name}`} />
+                <ul class="module-tags">
+                  {project.tags.map((tag) => <li class="ref">{tag}</li>)}
+                </ul>
+              </div>
+              <span class="module-ref ref" aria-hidden="true">PCB{i + 1}</span>
+            </article>
+          </>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .rail { position: relative; background: var(--void); }
+  .rail-view {
+    display: flex;
+    align-items: center;
+    min-height: 100dvh;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    padding-block: calc(var(--nav-h) + 44px) 44px;
+    outline: none;
+  }
+  .rail-view::-webkit-scrollbar { display: none; }
+  .rail-track { position: relative; display: flex; align-items: stretch; width: max-content; padding-inline: var(--gutter); will-change: transform; }
+
+  /* Tooling rails along the panel, with fiducials. */
+  .rail-edge { position: absolute; left: 0; right: 0; height: 12px; background: radial-gradient(circle, transparent 3.5px, var(--trace) 4px 5.5px, transparent 6px) 40px 0 / 340px 12px repeat-x; opacity: 0.5; }
+  .rail-edge-top { top: -26px; }
+  .rail-edge-bottom { bottom: -26px; }
+
+  .rail-intro { display: flex; flex-direction: column; justify-content: center; gap: 24px; width: min(52vw, 640px); padding-right: 48px; flex: none; scroll-snap-align: start; }
+  .rail-intro :global(.rail-title) { --trace-size: clamp(2.1rem, 5.4vw, 5rem); }
+  .rail-intro p { margin: 0; max-width: 26em; font-size: clamp(1.0625rem, 1.5vw, 1.375rem); line-height: 1.4; color: var(--silk-dim); text-wrap: pretty; }
+
+  /* Mouse bites: the breakaway tabs between boards on a panel. */
+  .bites { flex: none; width: 30px; background: radial-gradient(circle, var(--mask) 3px, transparent 3.6px) center / 12px 15px repeat-y; opacity: 0.8; }
+
+  .module {
+    position: relative;
+    flex: none;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: clamp(20px, 2.6vw, 36px);
+    width: min(84vw, 1200px);
+    height: min(76dvh, 720px);
+    padding: clamp(36px, 3.4vw, 52px) clamp(32px, 4vw, 60px);
+    background: var(--mask);
+    color: var(--silk);
+    scroll-snap-align: center;
+    --c: 26px;
+    clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
+  }
+
+  .hole { position: absolute; width: 16px; height: 16px; border: 3px solid var(--trace); border-radius: 50%; background: var(--void); }
+  .hole-a { top: 18px; left: 34px; }
+  .hole-b { top: 18px; right: 34px; }
+  .hole-c { bottom: 18px; left: 34px; }
+  .hole-d { bottom: 18px; right: 34px; }
+
+  .module-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(24px, 3.4vw, 56px); align-items: start; }
+  .module-head :global(.module-name) { --trace-size: clamp(1.75rem, 3.5vw, 3.2rem); }
+  .module-copy { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 24px; align-items: end; min-width: 0; }
+  .module-summary { grid-column: 1 / -1; margin: 0; font-size: clamp(1rem, 1.25vw, 1.1875rem); line-height: 1.42; text-wrap: pretty; }
+  .module-meta { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 0; }
+  .module-meta dd { margin: 1px 0 0; font-size: 0.9375rem; line-height: 1.3; }
+
+  .module-art { display: flex; flex-direction: column; justify-content: center; gap: 14px; min-width: 0; min-height: 0; }
+  .module-art :global(.diagram) { flex: 0 1 auto; min-height: 0; max-width: calc(var(--dg-w) * 1.02); }
+  .module-tags { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; padding: 0; list-style: none; }
+
+  .module-ref { position: absolute; right: 62px; bottom: 16px; }
+
+  @media (max-width: 1023px) {
+    .rail-view { min-height: 0; padding-block: 72px; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); }
+    .rail-track { align-items: stretch; }
+    .rail-intro { width: min(84vw, 520px); padding-right: 24px; }
+    .module { width: min(84vw, 560px); height: auto; grid-template-rows: auto auto; padding: 40px 26px 44px; --c: 18px; }
+    .module-head { grid-template-columns: 1fr; gap: 18px; }
+    .module-copy { grid-template-columns: 1fr; justify-items: start; }
+    .module-art :global(.diagram) { display: none; }
+    .hole { width: 12px; height: 12px; border-width: 2.5px; }
+    .hole-a { top: 14px; left: 24px; }
+    .hole-b { top: 14px; right: 24px; }
+    .hole-c { bottom: 14px; left: 24px; }
+    .hole-d { bottom: 14px; right: 24px; }
+    .module-ref { right: 46px; bottom: 11px; }
+    .bites { width: 20px; }
+  }
+
+  @media (max-height: 760px) and (min-width: 1024px) {
+    .module { height: 80dvh; padding-block: 28px; gap: 14px; }
+    .module-head :global(.module-name) { --trace-size: clamp(1.5rem, 2.6vw, 2.3rem); }
+    .module-tags { display: none; }
+  }
+</style>

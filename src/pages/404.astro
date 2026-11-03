@@ -1,0 +1,20 @@
+---
+import PadLink from '../components/PadLink.astro';
+import TraceText from '../components/TraceText.astro';
+import { notFound, site } from '../content';
+import Base from '../layouts/Base.astro';
+---
+
+<Base page="plain" title={`Page not found | ${site.name}`} description={notFound.body}>
+  <main id="main" class="lost wrap">
+    <TraceText as="h1" text={notFound.heading.split(' ')} class="lost-title" />
+    <p>{notFound.body}</p>
+    <PadLink href="/">{notFound.cta}</PadLink>
+  </main>
+</Base>
+
+<style>
+  .lost { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 24px; min-height: 100dvh; padding-block: calc(var(--nav-h) + 40px) 40px; }
+  .lost :global(.lost-title) { --trace-size: clamp(2.6rem, 9vw, 8rem); }
+  .lost p { margin: 0; max-width: 30em; font-size: clamp(1.0625rem, 1.5vw, 1.375rem); color: var(--silk-dim); }
+</style>

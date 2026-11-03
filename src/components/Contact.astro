@@ -1,0 +1,84 @@
+---
+import { contact, site } from '../content';
+import TraceText from './TraceText.astro';
+
+const year = new Date().getFullYear();
+---
+
+<section class="contact" id="contact" aria-labelledby="contact-title">
+  <svg class="net" data-net aria-hidden="true"></svg>
+  <div class="wrap lift contact-copy">
+    <TraceText id="contact-title" text={contact.heading} class="contact-title" data-reveal-trace />
+    <p class="contact-blurb">{contact.blurb}</p>
+  </div>
+
+  <div class="connector lift">
+    <p class="ref connector-ref" aria-hidden="true">J1</p>
+    <ul class="fingers">
+      {contact.links.map((link) => (
+        <li>
+          <a class="finger" href={link.href} data-magnetic-soft target={link.href.startsWith('https') ? '_blank' : undefined} rel={link.href.startsWith('https') ? 'noreferrer' : undefined}>
+            <span class="finger-label">{link.label}</span>
+            <span class="finger-value">{link.value}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <footer class="wrap lift colophon">
+    <span>© {year} {site.name}</span>
+    <span>{contact.location}</span>
+  </footer>
+
+  <div class="edge" aria-hidden="true"></div>
+</section>
+
+<style>
+  .contact { position: relative; padding-top: clamp(84px, 12vw, 170px); overflow: clip; }
+  .contact-copy :global(.contact-title) { --trace-size: clamp(2.3rem, 8vw, 7.4rem); }
+  .contact-blurb { margin: clamp(20px, 3vw, 36px) 0 0; max-width: 28em; font-size: clamp(1.125rem, 1.9vw, 1.75rem); line-height: 1.35; text-wrap: pretty; }
+
+  .connector { margin-top: clamp(56px, 8vw, 110px); padding-inline: var(--gutter); }
+  .connector-ref { margin: 0 0 10px; }
+  .fingers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(8px, 1.1vw, 16px); margin: 0; padding: 0; list-style: none; }
+  .finger {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 40px;
+    min-height: clamp(150px, 15vw, 220px);
+    padding: clamp(16px, 1.6vw, 24px);
+    background: linear-gradient(180deg, color-mix(in oklab, var(--trace), white 16%), var(--trace) 62%, color-mix(in oklab, var(--trace), black 12%));
+    color: var(--on-trace);
+    text-decoration: none;
+    will-change: transform;
+    --c: 16px;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)));
+    transition: transform 240ms var(--ease-out);
+  }
+  .finger-label { font-weight: 700; font-size: clamp(1.125rem, 1.7vw, 1.5rem); }
+  .finger-value { font-size: clamp(0.875rem, 1vw, 1rem); line-height: 1.3; overflow-wrap: anywhere; }
+  @media (hover: hover) and (pointer: fine) {
+    .finger:hover { transform: translateY(-12px); }
+  }
+  .finger:focus-visible { outline-color: var(--silk); outline-offset: -6px; }
+
+  .colophon { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 24px; padding-block: 22px; color: var(--silk-dim); font-size: 0.875rem; }
+
+  /* The board ends in a card edge: the last thing on the site plugs into something. */
+  .edge {
+    height: clamp(18px, 2.4vw, 30px);
+    margin-inline: var(--gutter);
+    background: repeating-linear-gradient(90deg, var(--trace) 0 clamp(7px, 0.8vw, 11px), transparent clamp(7px, 0.8vw, 11px) clamp(11px, 1.25vw, 17px));
+    opacity: 0.92;
+  }
+
+  @media (max-width: 760px) {
+    .fingers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .fingers li:first-child, .fingers li:last-child { grid-column: 1 / -1; }
+    .finger { min-height: 112px; gap: 20px; }
+    .finger-value { font-size: 1rem; }
+  }
+</style>

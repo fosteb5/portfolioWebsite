@@ -1,0 +1,79 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import b612Regular from '@fontsource/b612/files/b612-latin-400-normal.woff2?url';
+import b612Bold from '@fontsource/b612/files/b612-latin-700-normal.woff2?url';
+import Nav from '../components/Nav.astro';
+import { contact, site } from '../content';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Which page script to run. */
+  page: 'home' | 'case' | 'plain';
+  /** Browser UI colour, matched to the board at the top of the page. */
+  themeColor?: string;
+  image?: string;
+}
+
+const { title = site.title, description = site.description, page, themeColor = '#0C4A3A', image = '/og.jpg' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  url: Astro.site?.href,
+  jobTitle: 'Electrical and Computer Engineer',
+  email: contact.links[0].value,
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Western University' },
+  sameAs: contact.links.filter((link) => link.href.startsWith('https')).map((link) => link.href),
+};
+---
+
+<!doctype html>
+<html lang="en" transition:animate="none">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content={themeColor} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href={b612Regular} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={b612Bold} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(person)} />
+
+    <script is:inline>
+      // Marks that scripts run, so motion-only hidden states never strand a no-JS visitor.
+      document.documentElement.classList.add('js');
+      document.addEventListener('astro:after-swap', () => document.documentElement.classList.add('js'));
+    </script>
+    <ClientRouter fallback="swap" />
+  </head>
+  <body data-page={page}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="lamp" aria-hidden="true" transition:persist="lamp"></div>
+    <Nav />
+    <slot />
+    <div id="via" aria-hidden="true" transition:persist="via"></div>
+    <div id="cursor" aria-hidden="true" transition:persist="cursor">
+      <div class="cursor-ring"></div>
+      <div class="cursor-dot"></div>
+    </div>
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,48 @@
+---
+import { about } from '../content';
+import Media from './Media.astro';
+import TraceText from './TraceText.astro';
+---
+
+<section class="about" id="about" aria-labelledby="about-title">
+  <svg class="net" data-net aria-hidden="true"></svg>
+  <div class="about-inner wrap lift">
+    <div class="about-main">
+      <TraceText id="about-title" text={about.heading} class="about-title" data-reveal-trace />
+      <p class="about-statement" data-lit>{about.statement}</p>
+    </div>
+    <div class="about-side">
+      <Media media={about.portrait} sizes="(min-width: 1024px) 24vw, 80vw" class="about-portrait" />
+      <dl class="about-facts">
+        {about.facts.map((fact) => (
+          <div>
+            <dt class="ref">{fact.label}</dt>
+            <dd>{fact.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about { position: relative; display: flex; align-items: center; min-height: 100dvh; padding-block: calc(var(--nav-h) + 48px) 56px; overflow: clip; }
+  .about-inner { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .about-inner :global(.about-title) { --trace-size: clamp(2.1rem, 4.6vw, 4.25rem); margin-bottom: clamp(24px, 3.4vw, 48px); }
+  .about-statement { margin: 0; max-width: 28em; font-size: clamp(1.4rem, 2.75vw, 2.7rem); line-height: 1.26; letter-spacing: -0.01em; text-wrap: pretty; }
+  .about-side { display: grid; gap: 24px; }
+  .about-side :global(.about-portrait) { max-width: 300px; }
+  .about-side :global(.about-portrait figcaption) { display: none; }
+  .about-facts { display: grid; gap: 12px; margin: 0; }
+  .about-facts dd { margin: 2px 0 0; font-size: 0.9375rem; line-height: 1.4; }
+
+  @media (max-width: 960px) {
+    .about { min-height: 0; padding-block: clamp(84px, 16vw, 120px); }
+    .about-inner { grid-template-columns: 1fr; }
+    .about-side { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 20px; align-items: start; }
+  }
+  @media (max-width: 480px) {
+    .about-side { grid-template-columns: 1fr; }
+    .about-side :global(.about-portrait) { max-width: 200px; }
+  }
+</style>

@@ -1,0 +1,63 @@
+---
+import { CAP, MARGIN, WORD_HEIGHT, layoutWord, strokePath } from '../lib/trace-font';
+
+interface Props {
+  /** Capitals. Pass an array to force line breaks. */
+  text: string | string[];
+  as?: 'h1' | 'h2' | 'h3' | 'p' | 'span' | 'div';
+  id?: string;
+  class?: string;
+  /** Dark clearance around the copper, as on a ground pour. */
+  halo?: boolean;
+}
+
+const { text, as: Tag = 'h2', id, class: className, halo = true } = Astro.props;
+const lines = Array.isArray(text) ? text : [text];
+const layouts = lines.map((line) => line.split(' ').map(layoutWord));
+
+// É climbs above the cap line, so its word gets headroom without shifting its baseline.
+const HEADROOM = 2.6;
+const PAD_RADIUS = 0.4;
+---
+
+<Tag id={id} class:list={['trace', className]}>
+  <span class="sr-only">{lines.join(' ')}</span>
+  <span class="trace-art" aria-hidden="true">
+    {
+      layouts.map((words) => (
+        <span class="trace-line">
+          {words.map((word) => {
+            const top = word.accent ? HEADROOM : 0;
+            const width = word.width + MARGIN * 2;
+            const height = WORD_HEIGHT + top;
+            return (
+              <svg
+                class="trace-word"
+                viewBox={`${-MARGIN} ${-MARGIN - top} ${width} ${height}`}
+                style={`--word-h:calc(1em*${height}/${CAP});--word-ar:${width}/${height};${top ? `--word-lift:calc(-1em*${top}/${CAP});` : ''}`}
+                data-word={word.text}
+              >
+                {halo && (
+                  <g class="tr-halo">
+                    {word.glyphs.map((glyph) => (
+                      <>
+                        {glyph.strokes.map((stroke) => <path d={strokePath(stroke)} />)}
+                        {glyph.pads.map(([x, y]) => <circle cx={x} cy={y} r={PAD_RADIUS} />)}
+                      </>
+                    ))}
+                  </g>
+                )}
+                {word.glyphs.map((glyph) => (
+                  <g class="tr-glyph">
+                    {glyph.strokes.map((stroke) => <path class="tr" d={strokePath(stroke)} />)}
+                    {glyph.pads.map(([x, y]) => <circle class="tr-pad" cx={x} cy={y} r={PAD_RADIUS} />)}
+                  </g>
+                ))}
+              </svg>
+            );
+          })}
+        </span>
+      ))
+    }
+  </span>
+</Tag>

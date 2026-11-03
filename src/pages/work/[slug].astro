@@ -1,0 +1,246 @@
+---
+import Diagram from '../../components/Diagram.astro';
+import Media from '../../components/Media.astro';
+import PadLink from '../../components/PadLink.astro';
+import TraceText from '../../components/TraceText.astro';
+import { projects, site, type Project } from '../../content';
+import Base from '../../layouts/Base.astro';
+import { BOARDS, boardStyle } from '../../lib/boards';
+
+export function getStaticPaths() {
+  return projects.map((project, i) => ({
+    params: { slug: project.slug },
+    props: { project, next: projects[(i + 1) % projects.length] },
+  }));
+}
+
+interface Props {
+  project: Project;
+  next: Project;
+}
+
+const { project, next } = Astro.props;
+const board = BOARDS[project.board];
+const [lead, ...rest] = project.media;
+const closing = rest.length > 1 ? rest[rest.length - 1] : undefined;
+const inline = rest.length > 1 ? rest.slice(0, -1) : rest;
+
+const meta = [
+  { label: 'Role', value: project.role },
+  { label: 'Team', value: project.team },
+  { label: 'When', value: project.when },
+  { label: 'Where', value: project.where },
+  { label: 'Status', value: project.status },
+].filter((item) => item.value);
+
+const stackTables = [
+  { name: 'Hardware', rows: project.hardware ?? [] },
+  { name: 'Software', rows: project.software ?? [] },
+].filter((table) => table.rows.length);
+
+const index = [
+  { id: 'problem', label: 'Problem' },
+  { id: 'approach', label: 'Approach' },
+  { id: 'stack', label: 'Stack' },
+  { id: 'results', label: 'Results' },
+];
+---
+
+<Base page="case" title={`${project.name} | ${site.name}`} description={project.summary} themeColor={board.mask}>
+  <main id="main" class="case" style={boardStyle(project.board)}>
+    <section class="case-hero" data-board={project.board} data-chip={project.chip}>
+      <canvas class="board-canvas" aria-hidden="true"></canvas>
+      <div class="case-hero-inner wrap">
+        <a class="case-back link" href="/#work">Back to all work</a>
+        <TraceText as="h1" text={project.traceName} class="case-name await-motion" />
+        <div class="case-foot" data-keepout>
+          <p class="case-summary">{project.summary}</p>
+          <dl class="case-meta">
+            {meta.map((item) => (
+              <div>
+                <dt class="ref">{item.label}</dt>
+                <dd>{item.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <div class="layer">
+      {lead && (
+        <div class="wrap case-lead-media">
+          <Media media={lead} sizes="(min-width: 1560px) 1400px, 92vw" />
+        </div>
+      )}
+
+      <div class="wrap case-grid">
+        <nav class="case-index" aria-label="On this page">
+          <ul>
+            {index.map((item) => <li><a href={`#${item.id}`} data-index-link>{item.label}</a></li>)}
+          </ul>
+        </nav>
+
+        <div class="case-body">
+          <section id="problem" class="case-sec" data-case-sec>
+            <TraceText text="PROBLEM" class="case-h" />
+            {project.problem.map((paragraph, i) => <p class:list={[i === 0 ? 'case-big' : 'case-text']}>{paragraph}</p>)}
+          </section>
+
+          <section id="approach" class="case-sec" data-case-sec>
+            <TraceText text="APPROACH" class="case-h" />
+            <ul class="case-steps">
+              {project.approach.map((step) => <li>{step}</li>)}
+            </ul>
+            <div class="case-diagram" tabindex="0" role="group" aria-label="System diagram, scrollable">
+              <Diagram diagram={project.diagram} title={`System diagram for ${project.name}`} />
+            </div>
+            {inline.map((media) => <Media media={media} class="case-figure" />)}
+          </section>
+
+          <section id="stack" class="case-sec" data-case-sec>
+            <TraceText text="STACK" class="case-h" />
+            <p class="case-text">Hardware and software behind the project.</p>
+            <div class="bom">
+              {stackTables.map((table) => (
+                <table>
+                  <caption>{table.name}</caption>
+                  <thead>
+                    <tr><th scope="col">Area</th><th scope="col">What I used</th></tr>
+                  </thead>
+                  <tbody>
+                    {table.rows.map((row) => <tr><th scope="row">{row.area}</th><td>{row.item}</td></tr>)}
+                  </tbody>
+                </table>
+              ))}
+            </div>
+          </section>
+
+          <section id="results" class="case-sec" data-case-sec>
+            <TraceText text="RESULTS" class="case-h" />
+            <ul class="case-results">
+              {project.results.map((result) => <li>{result}</li>)}
+            </ul>
+            {project.metrics.length > 0 && (
+              <dl class="case-metrics">
+                {project.metrics.map((metric) => (
+                  <div>
+                    <dt class="ref">{metric.label}</dt>
+                    <dd>{metric.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            {import.meta.env.DEV && project.metrics.length === 0 && <p class="case-todo">TODO: add real numbers to `metrics` in src/content.ts. This note never appears on the live site.</p>}
+            {project.links && (
+              <div class="case-links">
+                {project.links.map((link) => (
+                  <PadLink href={link.href} variant="ghost" target="_blank" rel="noreferrer">Visit {link.label}</PadLink>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
+      </div>
+
+      {closing && (
+        <div class="wrap case-closing">
+          <Media media={closing} sizes="(min-width: 1560px) 1400px, 92vw" />
+        </div>
+      )}
+    </div>
+
+    <a class="next-board" href={`/work/${next.slug}/`} style={boardStyle(next.board)} data-via={BOARDS[next.board].mask}>
+      <span class="wrap next-inner">
+        <span class="next-label">Next project</span>
+        <TraceText as="span" text={next.traceName} class="next-name" />
+        <span class="sr-only">{next.name}</span>
+      </span>
+    </a>
+  </main>
+</Base>
+
+<style>
+  .case-hero { position: relative; display: flex; min-height: 92dvh; overflow: clip; background: var(--mask); color: var(--silk); }
+  .case-hero-inner { position: relative; z-index: 1; display: grid; grid-template-rows: auto 1fr auto; gap: 24px; padding-block: calc(var(--nav-h) + 40px) clamp(28px, 4.6vh, 52px); }
+  .case-back { justify-self: start; font-size: 0.9375rem; color: var(--silk-dim); }
+  .case-hero-inner :global(.case-name) { align-self: center; --trace-size: clamp(2.4rem, 7.2vw, 7.2rem); }
+  .case-foot { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px clamp(24px, 4vw, 64px); align-items: end; }
+  .case-summary { margin: 0; font-size: clamp(1.125rem, 1.7vw, 1.5rem); line-height: 1.35; text-wrap: pretty; }
+  .case-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 24px; margin: 0; }
+  .case-meta dd { margin: 2px 0 0; font-size: 0.9375rem; line-height: 1.35; }
+
+  /* The lighter inner layer. Every token flips, so shared components just work. */
+  .layer {
+    --mask: var(--paper);
+    --void: #DDE3DA;
+    --trace: var(--accent);
+    --on-trace: var(--paper);
+    --silk: var(--ink);
+    --silk-dim: var(--ink-dim);
+    position: relative;
+    z-index: 1;
+    background: var(--paper);
+    color: var(--ink);
+    padding-block: clamp(32px, 5vw, 72px) clamp(72px, 10vw, 140px);
+  }
+  .case-lead-media :global(.media-frame) { --c: 22px; }
+
+  .case-grid { display: grid; grid-template-columns: minmax(150px, 2fr) minmax(0, 7fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); margin-top: clamp(64px, 9vw, 130px); }
+  .case-index { align-self: start; position: sticky; top: calc(var(--nav-h) + 40px); }
+  .case-index ul { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+  .case-index a { display: block; padding: 5px 0 5px 16px; border-left: 2px solid var(--void); color: var(--ink-dim); font-size: 0.9375rem; text-decoration: none; transition: color 180ms ease, border-color 180ms ease; }
+  .case-index a[aria-current] { border-color: var(--accent); color: var(--ink); font-weight: 700; }
+
+  .case-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(72px, 10vw, 140px); min-width: 0; }
+  .case-sec :global(.case-h) { --trace-size: clamp(1.5rem, 3vw, 2.6rem); margin-bottom: clamp(20px, 2.6vw, 36px); }
+  .case-big { margin: 0; max-width: 28em; font-size: clamp(1.375rem, 2.6vw, 2.25rem); line-height: 1.28; letter-spacing: -0.01em; text-wrap: pretty; }
+  .case-text { margin: 1.1em 0 0; max-width: 40em; font-size: clamp(1rem, 1.25vw, 1.125rem); line-height: 1.65; text-wrap: pretty; }
+  .case-sec :global(.case-h) + .case-text { margin-top: 0; }
+
+  .case-steps { display: grid; gap: 18px; margin: 0; padding: 0; list-style: none; counter-reset: step; }
+  .case-steps li { position: relative; max-width: 40em; padding-left: 30px; font-size: clamp(1.0625rem, 1.35vw, 1.25rem); line-height: 1.55; text-wrap: pretty; }
+  .case-steps li::before { content: ""; position: absolute; left: 0; top: 0.42em; width: 14px; height: 14px; border: 3px solid var(--accent); border-radius: 50%; }
+
+  .case-diagram { margin-top: clamp(32px, 4vw, 56px); margin-inline-end: calc(-1 * (100% / 7 + clamp(24px, 4vw, 64px))); padding: clamp(18px, 2.6vw, 36px); background: var(--void); overflow-x: auto; --c: 16px; clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c)); }
+  .case-diagram :global(.diagram) { min-width: 640px; }
+  .case-diagram :global(.dg-box) { fill: var(--paper); }
+  .case-body :global(.case-figure) { margin-top: clamp(32px, 4vw, 56px); }
+
+  .bom { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); align-items: start; gap: 24px clamp(24px, 4vw, 56px); margin-top: 24px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; line-height: 1.4; }
+  caption { padding-bottom: 8px; text-align: left; font-weight: 700; color: var(--accent); }
+  thead th { padding: 0 12px 6px 0; text-align: left; font: 400 0.8125rem/1.3 var(--font-mono); color: var(--ink-dim); border-bottom: 1.5px solid var(--accent); }
+  tbody th { padding: 9px 12px 9px 0; text-align: left; font-weight: 700; vertical-align: top; white-space: nowrap; }
+  tbody td { padding: 9px 0; vertical-align: top; }
+  tbody tr + tr > * { border-top: 1px solid var(--void); }
+
+  .case-results { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+  .case-results li { position: relative; max-width: 34em; padding-left: 30px; font-size: clamp(1.125rem, 1.7vw, 1.5rem); line-height: 1.4; text-wrap: pretty; }
+  .case-results li::before { content: ""; position: absolute; left: 0; top: 0.42em; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); }
+  .case-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px; margin: 36px 0 0; }
+  .case-metrics dd { margin: 4px 0 0; font-size: clamp(1.75rem, 3vw, 2.75rem); font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .case-todo { margin: 24px 0 0; padding: 10px 14px; background: #ffe7e0; color: #7a1a00; font-size: 0.875rem; }
+  .case-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .case-closing { margin-top: clamp(72px, 10vw, 140px); }
+
+  .next-board { display: block; position: relative; z-index: 1; background: var(--mask); color: var(--silk); text-decoration: none; }
+  .next-inner { display: grid; gap: 22px; padding-block: clamp(56px, 8vw, 110px); }
+  .next-label { color: var(--silk-dim); }
+  .next-board :global(.next-name) { display: block; --trace-size: clamp(2rem, 6vw, 5.4rem); transition: transform 320ms var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .next-board:hover :global(.next-name) { transform: translateX(16px); }
+  }
+
+  @media (max-width: 960px) {
+    .case-diagram { margin-inline-end: 0; }
+    .case-foot { grid-template-columns: minmax(0, 1fr); }
+    .case-grid { grid-template-columns: minmax(0, 1fr); }
+    .case-index { display: none; }
+  }
+  @media (max-width: 620px) {
+    .case-hero-inner :global(.case-name) { --trace-size: clamp(1.9rem, 9.6vw, 3.4rem); }
+    .case-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    tbody th { white-space: normal; }
+  }
+</style>

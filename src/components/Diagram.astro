@@ -1,0 +1,99 @@
+---
+import type { Diagram } from '../content';
+
+interface Props {
+  diagram: Diagram;
+  /** Describes the system for screen readers. */
+  title: string;
+  class?: string;
+}
+
+const { diagram, title, class: className } = Astro.props;
+
+const W = 186;
+const H = 60;
+const GAP_X = 56;
+const GAP_Y = 32;
+const BEND = 12;
+const CUT = 8;
+
+const left = (col: number) => col * (W + GAP_X);
+const top = (row: number) => row * (H + GAP_Y);
+const byId = new Map(diagram.nodes.map((node) => [node.id, node]));
+const width = Math.max(...diagram.nodes.map((n) => left(n.col) + W));
+const height = Math.max(...diagram.nodes.map((n) => top(n.row) + H));
+
+function route(fromId: string, toId: string) {
+  const a = byId.get(fromId);
+  const b = byId.get(toId);
+  if (!a || !b) throw new Error(`Diagram edge points to a missing node: ${fromId} to ${toId}`);
+
+  if (a.col === b.col) {
+    const x = left(a.col) + W / 2;
+    const down = b.row > a.row;
+    const y1 = down ? top(a.row) + H : top(a.row);
+    const y2 = down ? top(b.row) : top(b.row) + H;
+    return { d: `M${x} ${y1}V${y2}`, ends: [[x, y1], [x, y2]] };
+  }
+
+  const dir = b.col > a.col ? 1 : -1;
+  const x1 = dir > 0 ? left(a.col) + W : left(a.col);
+  const x2 = dir > 0 ? left(b.col) : left(b.col) + W;
+  const y1 = top(a.row) + H / 2;
+  const y2 = top(b.row) + H / 2;
+  if (y1 === y2) return { d: `M${x1} ${y1}H${x2}`, ends: [[x1, y1], [x2, y2]] };
+
+  const sign = y2 > y1 ? 1 : -1;
+  const bend = Math.min(BEND, Math.abs(y2 - y1) / 2);
+  const trunk = x2 - (dir * GAP_X) / 2;
+  return {
+    d: `M${x1} ${y1}H${trunk - dir * bend}L${trunk} ${y1 + sign * bend}V${y2 - sign * bend}L${trunk + dir * bend} ${y2}H${x2}`,
+    ends: [[x1, y1], [x2, y2]],
+  };
+}
+
+const box = (x: number, y: number) =>
+  `M${x + CUT} ${y}H${x + W - CUT}L${x + W} ${y + CUT}V${y + H - CUT}L${x + W - CUT} ${y + H}H${x + CUT}L${x} ${y + H - CUT}V${y + CUT}Z`;
+
+/** Long labels break onto two lines at the space nearest the middle. */
+function labelLines(label: string) {
+  if (label.length <= 16 || !label.includes(' ')) return [label];
+  const mid = label.length / 2;
+  let split = label.indexOf(' ');
+  for (let i = split; i !== -1; i = label.indexOf(' ', i + 1)) {
+    if (Math.abs(i - mid) < Math.abs(split - mid)) split = i;
+  }
+  return [label.slice(0, split), label.slice(split + 1)];
+}
+
+const edges = diagram.edges.map(([from, to]) => route(from, to));
+const summary = `${title}: ${diagram.edges.map(([from, to]) => `${byId.get(from)?.label} to ${byId.get(to)?.label}`).join(', ')}.`;
+---
+
+<svg class:list={['diagram', className]} viewBox={`-8 -8 ${width + 16} ${height + 16}`} preserveAspectRatio="xMinYMid meet" style={`--dg-w:${width + 16}px`} role="img" aria-label={summary}>
+  <g class="dg-edges">{edges.map((edge) => <path class="dg-edge" d={edge.d} />)}</g>
+  {
+    diagram.nodes.map((node) => {
+      const x = left(node.col);
+      const y = top(node.row);
+      const lines = labelLines(node.label);
+      return (
+        <g class="dg-node">
+          <path class="dg-box" d={box(x, y)} />
+          <text x={x + W / 2} y={y + H / 2 + 6 - (lines.length - 1) * 10}>
+            {lines.map((line, i) => <tspan x={x + W / 2} dy={i ? 20 : 0}>{line}</tspan>)}
+          </text>
+        </g>
+      );
+    })
+  }
+  <g class="dg-pads">{edges.flatMap((edge) => edge.ends.map(([x, y]) => <circle cx={x} cy={y} r="4.5" />))}</g>
+</svg>
+
+<style>
+  .diagram { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--font-sans); }
+  .dg-edge { fill: none; stroke: var(--trace); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .dg-box { fill: color-mix(in srgb, var(--void) 62%, transparent); stroke: var(--silk-dim); stroke-width: 1.25; }
+  text { fill: var(--silk); font-size: 16.5px; text-anchor: middle; }
+  .dg-pads circle { fill: var(--mask); stroke: var(--trace); stroke-width: 2.5; }
+</style>
