@@ -250,6 +250,60 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: 'copyroom',
+    name: 'Copyroom',
+    traceName: ['COPYROOM'],
+    board: 'white',
+    chip: 'WEB',
+    summary: 'A Canadian online marketplace where teachers buy and sell classroom resources.',
+    role: 'Co-founder',
+    when: 'July 2026 to present',
+    where: 'Ontario, Canada',
+    status: 'Live since September 2026',
+    tags: ['Two-sided marketplace', 'Stripe Connect', 'GST/HST', 'Playwright', 'Claude Code'],
+    links: [{ label: 'copyroom.ca', href: 'https://copyroom.ca' }],
+    // TODO: confirm this framing of the problem. It is written from your résumé.
+    problem: [
+      'Teachers make classroom resources that other teachers can use. A Canadian marketplace for them has to handle accounts, file delivery, seller payouts and sales tax properly.',
+    ],
+    approach: [
+      'I built buyer and seller accounts, file uploads, and Stripe Connect split payments with Canadian GST/HST handling.',
+      'I use AI-assisted development, with Claude Code running parallel agents and Playwright testing, for site redesigns and performance optimization.',
+      'I run customer acquisition through Meta ad campaigns with AI-generated video and direct seller outreach.',
+    ],
+    software: [
+      { area: 'Accounts', item: 'Buyer and seller accounts' },
+      { area: 'Files', item: 'Resource uploads' },
+      { area: 'Payments', item: 'Stripe Connect split payments with GST/HST handling' },
+      { area: 'Quality', item: 'Playwright testing' },
+      { area: 'Growth', item: 'Meta ad campaigns and direct seller outreach' },
+    ],
+    results: ['Live for Canadian teachers since September 2026.'],
+    // TODO: add real numbers, such as sellers, resources listed or sales.
+    metrics: [],
+    diagram: {
+      nodes: [
+        { id: 'sellers', label: 'Sellers', col: 0, row: 0 },
+        { id: 'buyers', label: 'Buyers', col: 0, row: 1 },
+        { id: 'site', label: 'Copyroom', col: 1, row: 0.5 },
+        { id: 'files', label: 'File uploads', col: 2, row: 0 },
+        { id: 'stripe', label: 'Stripe Connect', col: 2, row: 1 },
+        { id: 'tax', label: 'GST/HST', col: 3, row: 1 },
+      ],
+      edges: [['sellers', 'site'], ['buyers', 'site'], ['site', 'files'], ['site', 'stripe'], ['stripe', 'tax']],
+    },
+    media: [
+      {
+        type: 'image',
+        src: 'projects/copyroom/storefront.jpg',
+        alt: 'The Copyroom home page, with a resource search box and the headline: Classroom resources from Canadian teachers, for Canadian classrooms',
+        caption: 'The Copyroom storefront, November 2026',
+        ratio: '16/9',
+      },
+      { type: 'image', src: '', alt: 'A Copyroom seller dashboard', caption: 'Seller view', ratio: '3/2' },
+    ],
+  },
+  {
     slug: 'spot-welder',
     name: 'Resistance spot welder power supply',
     traceName: ['SPOT', 'WELDER'],
@@ -330,60 +384,6 @@ export const projects: Project[] = [
     media: [
       { type: 'image', src: '', alt: 'The Raspberry Pi 5 smart home hub', caption: 'The hub', ratio: '16/9' },
       { type: 'image', src: '', alt: 'The facial recognition view', caption: 'Facial recognition in use', ratio: '3/2' },
-    ],
-  },
-  {
-    slug: 'copyroom',
-    name: 'Copyroom',
-    traceName: ['COPYROOM'],
-    board: 'white',
-    chip: 'WEB',
-    summary: 'A Canadian online marketplace where teachers buy and sell classroom resources.',
-    role: 'Co-founder',
-    when: '2025 to present',
-    where: 'Ontario, Canada',
-    status: 'Live since September 2026',
-    tags: ['Two-sided marketplace', 'Stripe Connect', 'GST/HST', 'Playwright', 'Claude Code'],
-    links: [{ label: 'copyroom.ca', href: 'https://copyroom.ca' }],
-    // TODO: confirm this framing of the problem. It is written from your résumé.
-    problem: [
-      'Teachers make classroom resources that other teachers can use. A Canadian marketplace for them has to handle accounts, file delivery, seller payouts and sales tax properly.',
-    ],
-    approach: [
-      'I built buyer and seller accounts, file uploads, and Stripe Connect split payments with Canadian GST/HST handling.',
-      'I use AI-assisted development, with Claude Code running parallel agents and Playwright testing, for site redesigns and performance optimization.',
-      'I run customer acquisition through Meta ad campaigns with AI-generated video and direct seller outreach.',
-    ],
-    software: [
-      { area: 'Accounts', item: 'Buyer and seller accounts' },
-      { area: 'Files', item: 'Resource uploads' },
-      { area: 'Payments', item: 'Stripe Connect split payments with GST/HST handling' },
-      { area: 'Quality', item: 'Playwright testing' },
-      { area: 'Growth', item: 'Meta ad campaigns and direct seller outreach' },
-    ],
-    results: ['Live for Canadian teachers since September 2026.'],
-    // TODO: add real numbers, such as sellers, resources listed or sales.
-    metrics: [],
-    diagram: {
-      nodes: [
-        { id: 'sellers', label: 'Sellers', col: 0, row: 0 },
-        { id: 'buyers', label: 'Buyers', col: 0, row: 1 },
-        { id: 'site', label: 'Copyroom', col: 1, row: 0.5 },
-        { id: 'files', label: 'File uploads', col: 2, row: 0 },
-        { id: 'stripe', label: 'Stripe Connect', col: 2, row: 1 },
-        { id: 'tax', label: 'GST/HST', col: 3, row: 1 },
-      ],
-      edges: [['sellers', 'site'], ['buyers', 'site'], ['site', 'files'], ['site', 'stripe'], ['stripe', 'tax']],
-    },
-    media: [
-      {
-        type: 'image',
-        src: 'projects/copyroom/storefront.jpg',
-        alt: 'The Copyroom home page, with a resource search box and the headline: Classroom resources from Canadian teachers, for Canadian classrooms',
-        caption: 'The Copyroom storefront, November 2026',
-        ratio: '16/9',
-      },
-      { type: 'image', src: '', alt: 'A Copyroom seller dashboard', caption: 'Seller view', ratio: '3/2' },
     ],
   },
   {
@@ -622,10 +622,10 @@ export const experience = {
     {
       org: 'Copyroom',
       role: 'Co-Founder',
-      dates: '2025 to present',
+      dates: 'July 2026 to present',
       where: 'Ontario, Canada',
       detail: 'Co-founded and launched a two-sided marketplace for teachers, live since September 2026.',
-      spans: [[2025.0, null]],
+      spans: [[2026.5, null]],
     },
     {
       org: 'LiftLabs',
