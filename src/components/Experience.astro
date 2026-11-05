@@ -49,6 +49,15 @@ const nextX = x(next.start);
       </div>
 
       <ol class="xp-rows">
+        <li class="sig sig-next" data-sig>
+          <div class="sig-text">
+            <h3>{next.role}</h3>
+            <p class="ref">{next.dates}</p>
+          </div>
+          <svg class="sig-wave" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true" data-wave>
+            <path class="sig-line sig-planned" d={`M${x(now).toFixed(1)} ${LOW}H${nextX.toFixed(1)}V${HIGH}H1000`} />
+          </svg>
+        </li>
         {signals.map((signal) => {
           const { line, area, planned } = wave(signal.spans);
           return (
@@ -67,15 +76,6 @@ const nextX = x(next.start);
             </li>
           );
         })}
-        <li class="sig sig-next" data-sig>
-          <div class="sig-text">
-            <h3>{next.role}</h3>
-            <p class="ref">{next.dates}</p>
-          </div>
-          <svg class="sig-wave" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true" data-wave>
-            <path class="sig-line sig-planned" d={`M${x(now).toFixed(1)} ${LOW}H${nextX.toFixed(1)}V${HIGH}H1000`} />
-          </svg>
-        </li>
       </ol>
     </div>
 

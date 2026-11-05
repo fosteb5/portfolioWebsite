@@ -187,134 +187,11 @@ export const about = {
 
 export const work = {
   heading: 'FEATURED WORK',
-  intro: 'Six boards, from an airship to a marketplace. Each one opens onto the full story.',
+  intro: 'Six boards, newest first. Each one opens onto the full story.',
   cta: 'Read the case study',
 };
 
 export const projects: Project[] = [
-  {
-    slug: 'liftlabs',
-    name: 'LiftLabs',
-    traceName: ['LIFTLABS'],
-    board: 'blue',
-    chip: 'ESP32',
-    summary: 'Electrical, software and control systems for an autonomous solar-powered blimp.',
-    role: 'Electrical, software and controls engineer',
-    team: 'Team of 5',
-    when: 'Sept 2024 to present',
-    where: 'London, ON',
-    tags: ['Custom PCBs', 'ESP32', 'Solar charging', 'Thrust vectoring', 'SolidWorks'],
-    links: [
-      { label: 'liftlabs.ca', href: 'https://liftlabs.ca' },
-      { label: 'Firmware on GitHub', href: 'https://github.com/fosteb5/LiftLabs' },
-    ],
-    // TODO: confirm this framing of the problem. It is written from your résumé.
-    problem: [
-      'An autonomous airship has to live on the power it collects. Solar charging, sensing, propulsion and control all have to work together on one airframe.',
-    ],
-    approach: [
-      'I designed custom PCBs that bring ESP32 microcontrollers, solar charge controllers, GPS, an altimeter and a gyroscope into one electrical system.',
-      'I wrote the motor control firmware for a thrust-vectoring propulsion system and built aerodynamic models of the airframe.',
-      'I produced the CAD and electrical schematics in SolidWorks and SolidWorks Electrical, and maintained the project’s web documentation.',
-    ],
-    hardware: [
-      { area: 'Control', item: 'ESP32 microcontrollers on custom PCBs' },
-      { area: 'Power', item: 'Solar charge controllers' },
-      { area: 'Sensing', item: 'GPS, altimeter and gyroscope' },
-      { area: 'Propulsion', item: 'Thrust-vectoring motors' },
-    ],
-    software: [
-      { area: 'Firmware', item: 'Motor control firmware' },
-      { area: 'Modelling', item: 'Aerodynamic models of the airframe' },
-      { area: 'Design', item: 'SolidWorks and SolidWorks Electrical' },
-    ],
-    results: ['Applied for and secured project funding from the Thompson Engineering Fund.'],
-    // TODO: add real numbers, such as flight time, altitude or solar output.
-    metrics: [],
-    diagram: {
-      nodes: [
-        { id: 'solar', label: 'Solar cells', col: 0, row: 0 },
-        { id: 'charge', label: 'Charge controller', col: 1, row: 0 },
-        { id: 'gps', label: 'GPS', col: 0, row: 1 },
-        { id: 'alt', label: 'Altimeter', col: 0, row: 2 },
-        { id: 'gyro', label: 'Gyroscope', col: 0, row: 3 },
-        { id: 'esp', label: 'ESP32', col: 2, row: 1.5 },
-        { id: 'motor', label: 'Motor firmware', col: 3, row: 1.5 },
-        { id: 'thrust', label: 'Thrust vectoring', col: 4, row: 1.5 },
-      ],
-      edges: [['solar', 'charge'], ['charge', 'esp'], ['gps', 'esp'], ['alt', 'esp'], ['gyro', 'esp'], ['esp', 'motor'], ['motor', 'thrust']],
-    },
-    // TODO: add a PCB close-up or flight footage here when you have them.
-    media: [
-      {
-        type: 'image',
-        src: 'projects/liftlabs/build-space.jpg',
-        alt: 'The inflated blimp envelope with its purple fin beside a workbench, with a solar panel on the table and a 3D printer behind',
-        caption: 'The envelope inflated beside the build bench, with one of the solar panels and the 3D printer',
-        ratio: '16/9',
-      },
-      {
-        type: 'image',
-        src: 'projects/liftlabs/envelope.jpg',
-        alt: 'The dark grey blimp envelope with purple inflatable fins, tethered indoors',
-        caption: 'The 13 ft PVC envelope, inflated and tethered indoors',
-        ratio: '4/3',
-      },
-      {
-        type: 'image',
-        src: 'projects/liftlabs/solar-panel.jpg',
-        alt: 'A flexible monocrystalline solar panel standing against a wall',
-        caption: 'One of the four 100 W flexible solar panels',
-        ratio: '4/3',
-      },
-      {
-        type: 'image',
-        src: 'projects/liftlabs/motor-esc.jpg',
-        alt: 'A blue brushless outrunner motor wired to an 80 A brushless ESC on a wooden table',
-        caption: 'A drive motor and its 80 A brushless ESC',
-        ratio: '3/2',
-      },
-      {
-        type: 'image',
-        src: 'projects/liftlabs/render.jpg',
-        alt: 'Render of the finished LiftLabs blimp against a blue sky, with four solar panels across the top, purple fins and a motor arm underneath',
-        caption: 'Render of the finished design',
-        ratio: '16/9',
-      },
-    ],
-    // Rendered in Blender from Projects/SolarBlimp/Blender/liftlabs-print.blend.
-    // Step timings match the scene's render script: BL_render.py for the blimp, LL_render.py for the parts.
-    sequences: [
-      {
-        id: 'design',
-        src: '/sequences/liftlabs-blimp/',
-        frames: 90,
-        heading: 'DESIGN',
-        intro: 'The finished blimp, built in Blender from photos of the envelope and the real mounting plate and motor mounts. Scroll to fly round it and watch the motors tilt.',
-        alt: 'Render of the finished LiftLabs blimp: a charcoal envelope with purple inflatable fins, four flexible solar panels across the top, and 1 m arms under the belly with a tilting motor at each end',
-        note: 'Rendered in Blender. The envelope, plate and motor mounts follow the real parts; the motors, props and arms are stand-ins.',
-        steps: [
-          { label: 'Envelope', detail: '13 ft PVC, inflatable fins', from: 0, to: 0.26 },
-          { label: 'Solar array', detail: '4 × 100 W flexible panels', from: 0.26, to: 0.52 },
-          { label: 'Thrust vectoring', detail: 'Motors tilt on 1 m arms', from: 0.6, to: 0.98 },
-        ],
-      },
-      {
-        id: 'parts',
-        src: '/sequences/liftlabs-print/',
-        frames: 72,
-        heading: 'PARTS',
-        intro: 'Three of the blimp’s parts from the SolidWorks model, rendered in Blender from their STL exports. Scroll to print them layer by layer.',
-        alt: 'Render of the motor-to-servo mount, the mounting plate with Lift Labs cut into its face, and the GPS enclosure, all printed in purple plastic',
-        note: 'Rendered in Blender. The colour and print order are for illustration.',
-        steps: [
-          { label: 'Motor-to-servo mount', detail: '60 × 60 × 30 mm', from: 0.05, to: 0.37 },
-          { label: 'Mounting plate', detail: '305 × 181 × 20 mm', from: 0.33, to: 0.65 },
-          { label: 'GPS enclosure', detail: '100 × 50 × 20 mm', from: 0.61, to: 0.93 },
-        ],
-      },
-    ],
-  },
   {
     slug: 'tethered-drone',
     name: 'Tethered window-washing drone',
@@ -456,6 +333,183 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: 'copyroom',
+    name: 'Copyroom',
+    traceName: ['COPYROOM'],
+    board: 'white',
+    chip: 'WEB',
+    summary: 'A Canadian online marketplace where teachers buy and sell classroom resources.',
+    role: 'Co-founder',
+    when: '2025 to present',
+    where: 'Ontario, Canada',
+    status: 'Live since September 2026',
+    tags: ['Two-sided marketplace', 'Stripe Connect', 'GST/HST', 'Playwright', 'Claude Code'],
+    links: [{ label: 'copyroom.ca', href: 'https://copyroom.ca' }],
+    // TODO: confirm this framing of the problem. It is written from your résumé.
+    problem: [
+      'Teachers make classroom resources that other teachers can use. A Canadian marketplace for them has to handle accounts, file delivery, seller payouts and sales tax properly.',
+    ],
+    approach: [
+      'I built buyer and seller accounts, file uploads, and Stripe Connect split payments with Canadian GST/HST handling.',
+      'I use AI-assisted development, with Claude Code running parallel agents and Playwright testing, for site redesigns and performance optimization.',
+      'I run customer acquisition through Meta ad campaigns with AI-generated video and direct seller outreach.',
+    ],
+    software: [
+      { area: 'Accounts', item: 'Buyer and seller accounts' },
+      { area: 'Files', item: 'Resource uploads' },
+      { area: 'Payments', item: 'Stripe Connect split payments with GST/HST handling' },
+      { area: 'Quality', item: 'Playwright testing' },
+      { area: 'Growth', item: 'Meta ad campaigns and direct seller outreach' },
+    ],
+    results: ['Live for Canadian teachers since September 2026.'],
+    // TODO: add real numbers, such as sellers, resources listed or sales.
+    metrics: [],
+    diagram: {
+      nodes: [
+        { id: 'sellers', label: 'Sellers', col: 0, row: 0 },
+        { id: 'buyers', label: 'Buyers', col: 0, row: 1 },
+        { id: 'site', label: 'Copyroom', col: 1, row: 0.5 },
+        { id: 'files', label: 'File uploads', col: 2, row: 0 },
+        { id: 'stripe', label: 'Stripe Connect', col: 2, row: 1 },
+        { id: 'tax', label: 'GST/HST', col: 3, row: 1 },
+      ],
+      edges: [['sellers', 'site'], ['buyers', 'site'], ['site', 'files'], ['site', 'stripe'], ['stripe', 'tax']],
+    },
+    media: [
+      {
+        type: 'image',
+        src: 'projects/copyroom/storefront.jpg',
+        alt: 'The Copyroom home page, with a resource search box and the headline: Classroom resources from Canadian teachers, for Canadian classrooms',
+        caption: 'The Copyroom storefront, November 2026',
+        ratio: '16/9',
+      },
+      { type: 'image', src: '', alt: 'A Copyroom seller dashboard', caption: 'Seller view', ratio: '3/2' },
+    ],
+  },
+  {
+    slug: 'liftlabs',
+    name: 'LiftLabs',
+    traceName: ['LIFTLABS'],
+    board: 'blue',
+    chip: 'ESP32',
+    summary: 'Electrical, software and control systems for an autonomous solar-powered blimp.',
+    role: 'Electrical, software and controls engineer',
+    team: 'Team of 5',
+    when: 'Sept 2024 to present',
+    where: 'London, ON',
+    tags: ['Custom PCBs', 'ESP32', 'Solar charging', 'Thrust vectoring', 'SolidWorks'],
+    links: [
+      { label: 'liftlabs.ca', href: 'https://liftlabs.ca' },
+      { label: 'Firmware on GitHub', href: 'https://github.com/fosteb5/LiftLabs' },
+    ],
+    // TODO: confirm this framing of the problem. It is written from your résumé.
+    problem: [
+      'An autonomous airship has to live on the power it collects. Solar charging, sensing, propulsion and control all have to work together on one airframe.',
+    ],
+    approach: [
+      'I designed custom PCBs that bring ESP32 microcontrollers, solar charge controllers, GPS, an altimeter and a gyroscope into one electrical system.',
+      'I wrote the motor control firmware for a thrust-vectoring propulsion system and built aerodynamic models of the airframe.',
+      'I produced the CAD and electrical schematics in SolidWorks and SolidWorks Electrical, and maintained the project’s web documentation.',
+    ],
+    hardware: [
+      { area: 'Control', item: 'ESP32 microcontrollers on custom PCBs' },
+      { area: 'Power', item: 'Solar charge controllers' },
+      { area: 'Sensing', item: 'GPS, altimeter and gyroscope' },
+      { area: 'Propulsion', item: 'Thrust-vectoring motors' },
+    ],
+    software: [
+      { area: 'Firmware', item: 'Motor control firmware' },
+      { area: 'Modelling', item: 'Aerodynamic models of the airframe' },
+      { area: 'Design', item: 'SolidWorks and SolidWorks Electrical' },
+    ],
+    results: ['Applied for and secured project funding from the Thompson Engineering Fund.'],
+    // TODO: add real numbers, such as flight time, altitude or solar output.
+    metrics: [],
+    diagram: {
+      nodes: [
+        { id: 'solar', label: 'Solar cells', col: 0, row: 0 },
+        { id: 'charge', label: 'Charge controller', col: 1, row: 0 },
+        { id: 'gps', label: 'GPS', col: 0, row: 1 },
+        { id: 'alt', label: 'Altimeter', col: 0, row: 2 },
+        { id: 'gyro', label: 'Gyroscope', col: 0, row: 3 },
+        { id: 'esp', label: 'ESP32', col: 2, row: 1.5 },
+        { id: 'motor', label: 'Motor firmware', col: 3, row: 1.5 },
+        { id: 'thrust', label: 'Thrust vectoring', col: 4, row: 1.5 },
+      ],
+      edges: [['solar', 'charge'], ['charge', 'esp'], ['gps', 'esp'], ['alt', 'esp'], ['gyro', 'esp'], ['esp', 'motor'], ['motor', 'thrust']],
+    },
+    // TODO: add a PCB close-up or flight footage here when you have them.
+    media: [
+      {
+        type: 'image',
+        src: 'projects/liftlabs/build-space.jpg',
+        alt: 'The inflated blimp envelope with its purple fin beside a workbench, with a solar panel on the table and a 3D printer behind',
+        caption: 'The envelope inflated beside the build bench, with one of the solar panels and the 3D printer',
+        ratio: '16/9',
+      },
+      {
+        type: 'image',
+        src: 'projects/liftlabs/envelope.jpg',
+        alt: 'The dark grey blimp envelope with purple inflatable fins, tethered indoors',
+        caption: 'The 13 ft PVC envelope, inflated and tethered indoors',
+        ratio: '4/3',
+      },
+      {
+        type: 'image',
+        src: 'projects/liftlabs/solar-panel.jpg',
+        alt: 'A flexible monocrystalline solar panel standing against a wall',
+        caption: 'One of the four 100 W flexible solar panels',
+        ratio: '4/3',
+      },
+      {
+        type: 'image',
+        src: 'projects/liftlabs/motor-esc.jpg',
+        alt: 'A blue brushless outrunner motor wired to an 80 A brushless ESC on a wooden table',
+        caption: 'A drive motor and its 80 A brushless ESC',
+        ratio: '3/2',
+      },
+      {
+        type: 'image',
+        src: 'projects/liftlabs/render.jpg',
+        alt: 'Render of the finished LiftLabs blimp against a blue sky, with four solar panels across the top, purple fins and a motor arm underneath',
+        caption: 'Render of the finished design',
+        ratio: '16/9',
+      },
+    ],
+    // Rendered in Blender from Projects/SolarBlimp/Blender/liftlabs-print.blend.
+    // Step timings match the scene's render script: BL_render.py for the blimp, LL_render.py for the parts.
+    sequences: [
+      {
+        id: 'design',
+        src: '/sequences/liftlabs-blimp/',
+        frames: 90,
+        heading: 'DESIGN',
+        intro: 'The finished blimp, built in Blender from photos of the envelope and the real mounting plate and motor mounts. Scroll to fly round it and watch the motors tilt.',
+        alt: 'Render of the finished LiftLabs blimp: a charcoal envelope with purple inflatable fins, four flexible solar panels across the top, and 1 m arms under the belly with a tilting motor at each end',
+        note: 'Rendered in Blender. The envelope, plate and motor mounts follow the real parts; the motors, props and arms are stand-ins.',
+        steps: [
+          { label: 'Envelope', detail: '13 ft PVC, inflatable fins', from: 0, to: 0.26 },
+          { label: 'Solar array', detail: '4 × 100 W flexible panels', from: 0.26, to: 0.52 },
+          { label: 'Thrust vectoring', detail: 'Motors tilt on 1 m arms', from: 0.6, to: 0.98 },
+        ],
+      },
+      {
+        id: 'parts',
+        src: '/sequences/liftlabs-print/',
+        frames: 72,
+        heading: 'PARTS',
+        intro: 'Three of the blimp’s parts from the SolidWorks model, rendered in Blender from their STL exports. Scroll to print them layer by layer.',
+        alt: 'Render of the motor-to-servo mount, the mounting plate with Lift Labs cut into its face, and the GPS enclosure, all printed in purple plastic',
+        note: 'Rendered in Blender. The colour and print order are for illustration.',
+        steps: [
+          { label: 'Motor-to-servo mount', detail: '60 × 60 × 30 mm', from: 0.05, to: 0.37 },
+          { label: 'Mounting plate', detail: '305 × 181 × 20 mm', from: 0.33, to: 0.65 },
+          { label: 'GPS enclosure', detail: '100 × 50 × 20 mm', from: 0.61, to: 0.93 },
+        ],
+      },
+    ],
+  },
+  {
     slug: 'volume-remote',
     name: 'Motorized volume remote',
     traceName: ['VOLUME', 'REMOTE'],
@@ -520,60 +574,6 @@ export const projects: Project[] = [
       },
     ],
   },
-  {
-    slug: 'copyroom',
-    name: 'Copyroom',
-    traceName: ['COPYROOM'],
-    board: 'white',
-    chip: 'WEB',
-    summary: 'A Canadian online marketplace where teachers buy and sell classroom resources.',
-    role: 'Co-founder',
-    when: '2025 to present',
-    where: 'Ontario, Canada',
-    status: 'Live since September 2026',
-    tags: ['Two-sided marketplace', 'Stripe Connect', 'GST/HST', 'Playwright', 'Claude Code'],
-    links: [{ label: 'copyroom.ca', href: 'https://copyroom.ca' }],
-    // TODO: confirm this framing of the problem. It is written from your résumé.
-    problem: [
-      'Teachers make classroom resources that other teachers can use. A Canadian marketplace for them has to handle accounts, file delivery, seller payouts and sales tax properly.',
-    ],
-    approach: [
-      'I built buyer and seller accounts, file uploads, and Stripe Connect split payments with Canadian GST/HST handling.',
-      'I use AI-assisted development, with Claude Code running parallel agents and Playwright testing, for site redesigns and performance optimization.',
-      'I run customer acquisition through Meta ad campaigns with AI-generated video and direct seller outreach.',
-    ],
-    software: [
-      { area: 'Accounts', item: 'Buyer and seller accounts' },
-      { area: 'Files', item: 'Resource uploads' },
-      { area: 'Payments', item: 'Stripe Connect split payments with GST/HST handling' },
-      { area: 'Quality', item: 'Playwright testing' },
-      { area: 'Growth', item: 'Meta ad campaigns and direct seller outreach' },
-    ],
-    results: ['Live for Canadian teachers since September 2026.'],
-    // TODO: add real numbers, such as sellers, resources listed or sales.
-    metrics: [],
-    diagram: {
-      nodes: [
-        { id: 'sellers', label: 'Sellers', col: 0, row: 0 },
-        { id: 'buyers', label: 'Buyers', col: 0, row: 1 },
-        { id: 'site', label: 'Copyroom', col: 1, row: 0.5 },
-        { id: 'files', label: 'File uploads', col: 2, row: 0 },
-        { id: 'stripe', label: 'Stripe Connect', col: 2, row: 1 },
-        { id: 'tax', label: 'GST/HST', col: 3, row: 1 },
-      ],
-      edges: [['sellers', 'site'], ['buyers', 'site'], ['site', 'files'], ['site', 'stripe'], ['stripe', 'tax']],
-    },
-    media: [
-      {
-        type: 'image',
-        src: 'projects/copyroom/storefront.jpg',
-        alt: 'The Copyroom home page, with a resource search box and the headline: Classroom resources from Canadian teachers, for Canadian classrooms',
-        caption: 'The Copyroom storefront, November 2026',
-        ratio: '16/9',
-      },
-      { type: 'image', src: '', alt: 'A Copyroom seller dashboard', caption: 'Seller view', ratio: '3/2' },
-    ],
-  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -620,28 +620,20 @@ export const experience = {
   timelineEnd: 2028,
   signals: [
     {
-      org: 'Kawartha Lakes Honey',
-      role: 'Beekeeper',
-      dates: 'Jan 2020 to June 2023',
-      where: 'Bobcaygeon, ON',
-      detail: 'Maintained healthy colonies, and built and repaired beekeeping equipment in the woodshop, often working independently.',
-      spans: [[2020.0, 2023.42]],
+      org: 'Copyroom',
+      role: 'Co-Founder',
+      dates: '2025 to present',
+      where: 'Ontario, Canada',
+      detail: 'Co-founded and launched a two-sided marketplace for teachers, live since September 2026.',
+      spans: [[2025.0, null]],
     },
     {
-      org: 'University of Guelph',
-      role: 'Bee Research Technician',
-      dates: 'June 2022 to June 2023',
-      where: 'Bobcaygeon, ON',
-      detail: 'Fabricated an alternative method for overwintering queens and colonies that improved survival rates, and collected data for a PhD research project.',
-      spans: [[2022.42, 2023.42]],
-    },
-    {
-      org: 'Western University',
-      role: 'BESc, Electrical & Computer Engineering and AI Systems Engineering',
-      dates: 'Sept 2022 to April 2027 (expected)',
+      org: 'LiftLabs',
+      role: 'Electrical, Software and Controls Engineer',
+      dates: 'Sept 2024 to present',
       where: 'London, ON',
-      detail: 'Dual degree. Coursework includes real-time and embedded systems, robotics, power systems and data-driven control.',
-      spans: [[2022.67, 2027.25]],
+      detail: 'Custom PCBs, motor control firmware and aerodynamic models for an autonomous solar-powered blimp.',
+      spans: [[2024.67, null]],
     },
     {
       org: 'Parks Canada, Trent-Severn Waterway',
@@ -653,20 +645,28 @@ export const experience = {
       spans: [[2023.42, 2023.75], [2024.42, 2024.75], [2025.42, 2025.75], [2026.42, 2026.75]],
     },
     {
-      org: 'LiftLabs',
-      role: 'Electrical, Software and Controls Engineer',
-      dates: 'Sept 2024 to present',
+      org: 'Western University',
+      role: 'BESc, Electrical & Computer Engineering and AI Systems Engineering',
+      dates: 'Sept 2022 to April 2027 (expected)',
       where: 'London, ON',
-      detail: 'Custom PCBs, motor control firmware and aerodynamic models for an autonomous solar-powered blimp.',
-      spans: [[2024.67, null]],
+      detail: 'Dual degree. Coursework includes real-time and embedded systems, robotics, power systems and data-driven control.',
+      spans: [[2022.67, 2027.25]],
     },
     {
-      org: 'Copyroom',
-      role: 'Co-Founder',
-      dates: '2025 to present',
-      where: 'Ontario, Canada',
-      detail: 'Co-founded and launched a two-sided marketplace for teachers, live since September 2026.',
-      spans: [[2025.0, null]],
+      org: 'University of Guelph',
+      role: 'Bee Research Technician',
+      dates: 'June 2022 to June 2023',
+      where: 'Bobcaygeon, ON',
+      detail: 'Fabricated an alternative method for overwintering queens and colonies that improved survival rates, and collected data for a PhD research project.',
+      spans: [[2022.42, 2023.42]],
+    },
+    {
+      org: 'Kawartha Lakes Honey',
+      role: 'Beekeeper',
+      dates: 'Jan 2020 to June 2023',
+      where: 'Bobcaygeon, ON',
+      detail: 'Maintained healthy colonies, and built and repaired beekeeping equipment in the woodshop, often working independently.',
+      spans: [[2020.0, 2023.42]],
     },
   ],
   next: {
