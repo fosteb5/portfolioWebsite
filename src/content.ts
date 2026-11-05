@@ -244,9 +244,50 @@ export const projects: Project[] = [
       edges: [['gen', 'base'], ['base', 'tether'], ['tether', 'fc'], ['fc', 'motors'], ['cv', 'pi'], ['pi', 'fc']],
     },
     media: [
-      { type: 'image', src: '', alt: 'The tethered hexacopter', caption: 'The hexacopter on the bench', ratio: '16/9' },
+      {
+        type: 'image',
+        src: 'projects/tethered-drone/render.jpg',
+        alt: 'Render of the hexacopter beside a glass office tower, spraying a fan of water at a dirty window and leaving a clean, wet stripe behind it',
+        caption: 'Concept render of the drone at work',
+        ratio: '16/9',
+      },
       { type: 'image', src: '', alt: 'The ESP32 flight controller PCB', caption: 'Flight controller PCB', ratio: '3/2' },
       { type: 'video', src: '', poster: '', alt: 'Tethered flight test', caption: 'Tethered flight test', ratio: '16/9' },
+    ],
+    // Rendered in Blender from Projects/TetheredDrone/Blender/tethered-drone.blend. Step timings match its td_anim.py.
+    sequences: [
+      {
+        id: 'on-the-glass',
+        src: '/sequences/tethered-drone-wash/',
+        frames: 120,
+        scroll: 320,
+        heading: 'ON THE GLASS',
+        intro: 'The drone at work, ten storeys up. It climbs on its tether, lines up on a pane and sprays it, with the water pumped up from the ground. Scroll to clean the glass.',
+        alt: 'Render of the hexacopter beside a glass office tower, spraying a dirty window and leaving a clean, wet stripe behind it',
+        note: 'Concept render made in Blender. The airframe is still being designed, so its shape and parts are illustrative.',
+        steps: [
+          { label: 'Climb', detail: 'On the tether, no battery', from: 0.02, to: 0.24 },
+          { label: 'Line up', detail: 'Square to the glass', from: 0.24, to: 0.34 },
+          { label: 'Spray', detail: 'Water from the ground', from: 0.34, to: 0.42 },
+          { label: 'Sweep', detail: 'Across the pane', from: 0.42, to: 0.94 },
+        ],
+      },
+      {
+        id: 'design',
+        src: '/sequences/tethered-drone-design/',
+        frames: 132,
+        scroll: 380,
+        heading: 'DESIGN',
+        intro: 'The same concept taken apart. Scroll to lift off the props and motors, then the ESP32 flight controller I am designing, the Raspberry Pi and camera for autonomous mode, and the tether hardware underneath.',
+        alt: 'Exploded render of the hexacopter: propellers and motors above the arms, the flight controller, Raspberry Pi and GPS floating over the frame, and the tether hub, power converter and landing gear below',
+        note: 'Concept render made in Blender. The parts and sizes are illustrative, not the final design.',
+        steps: [
+          { label: 'Propulsion', detail: 'Six motors and props', from: 0.04, to: 0.29 },
+          { label: 'Flight controller', detail: 'Custom ESP32 PCB', from: 0.29, to: 0.49 },
+          { label: 'Autonomy', detail: 'Raspberry Pi and camera', from: 0.49, to: 0.69 },
+          { label: 'Tether', detail: 'Power and water from the ground', from: 0.69, to: 0.9 },
+        ],
+      },
     ],
   },
   {
