@@ -44,7 +44,7 @@ const nextX = x(next.start);
 
     <div class="xp-chart" data-xp style={`--now:${pct(now)}`}>
       <div class="xp-grid" aria-hidden="true">
-        {years.map((year) => <span class="xp-year" style={`left:${pct(year)}`}><b>{year}</b></span>)}
+        {years.map((year) => <span class:list={['xp-year', { 'xp-year-end': year === end }]} style={`left:${pct(year)}`}><b>{year}</b></span>)}
         <span class="xp-now" data-xp-now><b>Now</b></span>
       </div>
 
@@ -65,7 +65,7 @@ const nextX = x(next.start);
               <div class="sig-text">
                 <h3>{signal.role}</h3>
                 <p class="sig-org">{signal.org}</p>
-                <p class="ref">{signal.dates}, {signal.where}</p>
+                <p class="ref">{signal.dates} · {signal.where}</p>
                 <p class="sig-detail">{signal.detail}</p>
               </div>
               <svg class="sig-wave" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true" data-wave>
@@ -119,6 +119,8 @@ const nextX = x(next.start);
     .xp-year { top: 22px; bottom: auto; height: 20px; border-left: 0; }
     .xp-year b { position: static; font-size: 0.6875rem; }
     .xp-year:nth-child(even) { display: none; }
+    /* The last year sits on the right edge, so its label reads leftwards to stay on screen. */
+    .xp-year-end b { display: inline-block; transform: translateX(-100%); }
     .xp-now { top: 0; bottom: auto; height: 40px; }
     .sig { grid-template-columns: 1fr; gap: 10px; padding-block: 20px; }
     .sig-text { padding-right: 0; }

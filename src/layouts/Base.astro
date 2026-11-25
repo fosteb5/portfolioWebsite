@@ -25,7 +25,7 @@ const person = {
   '@type': 'Person',
   name: site.name,
   url: Astro.site?.href,
-  jobTitle: 'Electrical and Computer Engineer',
+  jobTitle: 'Electrical and Computer Engineering Student',
   email: contact.links[0].value,
   alumniOf: { '@type': 'CollegeOrUniversity', name: 'Western University' },
   sameAs: contact.links.filter((link) => link.href.startsWith('https')).map((link) => link.href),

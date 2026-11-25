@@ -128,17 +128,18 @@ export interface Project {
 
 export const site = {
   name: 'Foster Beard',
-  title: 'Foster Beard | Electrical and Computer Engineer',
+  title: 'Foster Beard | Electrical and Computer Engineering Student',
   description:
-    'Foster Beard is an electrical and computer engineer building hardware, robotics and AI systems. Graduating from Western University in April 2027 and open to full-time roles from Spring 2027.',
-  location: 'Ontario, Canada (GTA / London)',
+    'Foster Beard is an electrical and computer engineering student at Western University, building hardware, robotics and AI systems. Graduating in April 2027 and open to full-time roles from Spring 2027.',
+  location: 'Bobcaygeon and London, Ontario',
   /** Printed on the circuit board in the hero. */
   boardMark: 'FB-2027  REV A',
 };
 
+/** In the same order as the sections on the home page. */
 export const nav: LinkItem[] = [
-  { label: 'Work', href: '/#work' },
   { label: 'About', href: '/#about' },
+  { label: 'Work', href: '/#work' },
   { label: 'Toolbox', href: '/#toolbox' },
   { label: 'Experience', href: '/#experience' },
   { label: 'Résumé', href: '/#resume' },
@@ -151,7 +152,7 @@ export const nav: LinkItem[] = [
 export const hero = {
   /** Lettered in copper traces. Capitals, one array entry per line. */
   name: ['FOSTER', 'BEARD'],
-  lead: 'Electrical and computer engineer building hardware, robotics and AI systems.',
+  lead: 'Electrical and computer engineering student building hardware, robotics and AI systems.',
   availability: 'Graduating April 2027. Open to full-time roles from Spring 2027.',
   primaryCta: { label: 'View work', href: '/#work' },
   secondaryCta: { label: 'Get in touch', href: '/#contact' },
@@ -168,8 +169,8 @@ export const about = {
   facts: [
     { label: 'Studying', value: 'BESc, Electrical & Computer Engineering and AI Systems Engineering (dual degree), Western University' },
     { label: 'Graduating', value: 'April 2027' },
-    { label: 'Looking for', value: 'Full-time engineering roles starting Spring 2027' },
-    { label: 'Based in', value: 'Ontario (GTA / London)' },
+    { label: 'Looking for', value: 'Full-time engineering roles from Spring 2027, in the GTA or near Bobcaygeon' },
+    { label: 'Based in', value: 'Bobcaygeon, ON, and London, ON during the school year' },
   ],
   // TODO: add a portrait to src/assets/projects/about/ and set src, for example 'projects/about/portrait.jpg'.
   portrait: {
@@ -351,7 +352,8 @@ export const projects: Project[] = [
     board: 'red',
     chip: 'ESP32',
     summary: 'A high-current power supply on a custom PCB, with ESP32-based closed-loop current control.',
-    role: 'Design and build', // TODO: confirm, and add a team if this was not a solo project.
+    role: 'Design and build',
+    team: 'Team of 3',
     when: 'Jan 2026 to May 2026',
     tags: ['Power electronics', 'Closed-loop control', 'ESP32', 'Custom PCB', 'Hall-effect sensing'],
     // TODO: confirm this framing of the problem. It is written from your résumé.
@@ -395,7 +397,8 @@ export const projects: Project[] = [
     board: 'purple',
     chip: 'RPI 5',
     summary: 'A Raspberry Pi 5 home automation hub with integrated sensors and computer vision facial recognition.',
-    role: 'Design and build', // TODO: confirm, and add a team if this was not a solo project.
+    role: 'Design and build',
+    team: 'Team of 3',
     when: 'Jan 2026 to April 2026',
     tags: ['Raspberry Pi 5', 'Computer vision', 'Facial recognition', 'Sensors'],
     // TODO: confirm this framing of the problem. It is written from your résumé.
@@ -557,7 +560,8 @@ export const projects: Project[] = [
     board: 'amber',
     chip: 'ESP32',
     summary: 'A wireless remote that physically turns a surround sound receiver’s volume knob.',
-    role: 'Design and build', // TODO: confirm, and add a team if this was not a solo project.
+    role: 'Design and build',
+    team: 'Solo project',
     when: 'Sept 2024, redesigned Feb 2026',
     tags: ['ESP32', 'Stepper motor', 'Custom PCB', 'Low-power firmware', 'SolidWorks'],
     // TODO: confirm this framing of the problem. It is written from your résumé.
@@ -630,7 +634,7 @@ export const toolbox = {
       items: ['ESP32', 'Raspberry Pi', 'Arduino', 'Embedded C and C++', 'RTOS and real-time scheduling', 'Interrupt-driven firmware', 'Motor control', 'Sensor integration and calibration'],
     },
     {
-      name: 'PCB design and power',
+      name: 'Hardware and power',
       items: ['Custom PCB design', 'Autodesk Eagle', 'SolidWorks Electrical', 'Power electronics', 'Closed-loop current control', 'Solar charge controllers', 'Three-phase power', 'SolidWorks, Fusion 360, Onshape'],
     },
     {
@@ -682,7 +686,7 @@ export const experience = {
       dates: 'June 2023 to present, seasonal',
       where: 'Gamebridge, ON',
       detail: 'Operate canal locks and swing bridge equipment over four seasons, and monitor and maintain the mechanical and electrical lock equipment.',
-      // TODO: confirm the months each season ran.
+      // Each season ran June to September.
       spans: [[2023.42, 2023.75], [2024.42, 2024.75], [2025.42, 2025.75], [2026.42, 2026.75]],
     },
     {
@@ -743,11 +747,10 @@ export const resume = {
 export const contact = {
   heading: 'GET IN TOUCH',
   blurb: 'I’m looking for full-time engineering roles starting Spring 2027, in hardware, robotics and AI systems.',
-  location: 'Based in Ontario (GTA / London)',
+  location: 'Based in Bobcaygeon and London, ON',
   links: [
     { label: 'Email', value: 'foster5beard@gmail.com', href: 'mailto:foster5beard@gmail.com' },
     { label: 'LinkedIn', value: 'in/fosterbeard', href: 'https://www.linkedin.com/in/fosterbeard' },
-    // TODO: confirm this is the GitHub profile you want to show.
     { label: 'GitHub', value: 'fosteb5', href: 'https://github.com/fosteb5' },
     { label: 'Phone', value: '(705) 731-9471', href: 'tel:+17057319471' },
   ],
