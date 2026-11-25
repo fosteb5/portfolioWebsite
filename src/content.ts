@@ -747,7 +747,6 @@ export const resume = {
 export const contact = {
   heading: 'GET IN TOUCH',
   blurb: 'I’m looking for full-time engineering roles starting Spring 2027, in hardware, robotics and AI systems.',
-  location: 'Based in Bobcaygeon and London, ON',
   links: [
     { label: 'Email', value: 'foster5beard@gmail.com', href: 'mailto:foster5beard@gmail.com' },
     { label: 'LinkedIn', value: 'in/fosterbeard', href: 'https://www.linkedin.com/in/fosterbeard' },
