@@ -45,7 +45,7 @@ const index = [
   { id: 'approach', label: 'Approach' },
   ...sequences.map((sequence) => ({ id: sequence.id, label: sequence.heading.charAt(0) + sequence.heading.slice(1).toLowerCase() })),
   { id: 'stack', label: 'Stack' },
-  { id: 'results', label: 'Results' },
+  { id: 'results', label: project.resultsHeading ?? 'Results' },
 ];
 ---
 
@@ -120,7 +120,7 @@ const index = [
                 <table>
                   <caption>{table.name}</caption>
                   <thead>
-                    <tr><th scope="col">Area</th><th scope="col">What I used</th></tr>
+                    <tr><th scope="col">Area</th><th scope="col">Details</th></tr>
                   </thead>
                   <tbody>
                     {table.rows.map((row) => <tr><th scope="row">{row.area}</th><td>{row.item}</td></tr>)}
@@ -131,7 +131,7 @@ const index = [
           </section>
 
           <section id="results" class="case-sec" data-case-sec>
-            <TraceText text="RESULTS" class="case-h" />
+            <TraceText text={(project.resultsHeading ?? 'Results').toUpperCase()} class="case-h" />
             <ul class="case-results">
               {project.results.map((result) => <li>{result}</li>)}
             </ul>

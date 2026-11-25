@@ -110,6 +110,8 @@ export interface Project {
   software?: StackItem[];
   /** Results you can state today. */
   results: string[];
+  /** Heading for the results section. 'Results' when not set; 'Status' suits a project still being built. */
+  resultsHeading?: string;
   /**
    * Hard numbers. Add real ones when you have them, for example
    *   { label: 'Peak weld current', value: '850 A' }
@@ -199,7 +201,7 @@ export const projects: Project[] = [
     traceName: ['TETHERED', 'DRONE'],
     board: 'black',
     chip: 'ESP32',
-    summary: 'A tethered quadcopter that washes high-rise windows, with its power and water fed up from the ground.',
+    summary: 'A tethered quadcopter we are building to wash high-rise windows, with its power and water fed up from the ground.',
     role: 'Flight controller and controls lead',
     team: 'Team of 4, ECE capstone design project',
     when: 'Sept 2026 to present',
@@ -207,15 +209,15 @@ export const projects: Project[] = [
     status: 'In design, demo March 2027',
     tags: ['Flight control', 'Neural-network control', 'Custom PCB', 'ESP32', 'Power over Ethernet'],
     problem: [
-      'High-rise windows are washed by crews on ropes or in gondolas. We are building a safer, cheaper alternative: a drone with no battery that can stay at the glass as long as the job takes.',
-      'Requirements come from an industry partner, Blondie’s Window Services.',
+      'High-rise windows are washed by crews on ropes or in gondolas. We are building a safer, cheaper alternative: a drone with no battery, designed to stay at the glass as long as the job takes.',
+      'We are defining the requirements with an industry partner, Blondie’s Window Services.',
     ],
     approach: [
-      'A base station turns 240 V AC into about 400 V DC for the tether, plus a Power-over-Ethernet line for the flight controller and camera. A pump sends water up a hose alongside.',
-      'On board, a step-down converter feeds the motors at about 50 V. The drone holds a set distance from the glass while it sprays, and streams video to the operator.',
-      'I lead the control system, and designed the ESP32 flight controller PCB and the PoE supply.',
-      'PID loops stabilize the drone, and a neural network trained in simulation decides where it should be. It holds its distance from the glass by ultrasonic, and its height and position by GPS and barometer, while correcting for wind and the pull of the hose.',
-      'The demo prototype is a scaled-down quad on 120 V wall power, with carbon fibre arms through a 3D-printed body.',
+      'The base station will turn 240 V AC into about 400 V DC for the tether, plus a Power-over-Ethernet line for the flight controller and camera. A pump will send water up a hose alongside.',
+      'On board, a step-down converter will feed the motors at about 50 V. The drone will hold a set distance from the glass while it sprays, and stream video to the operator.',
+      'I lead the control system, and I am designing the ESP32 flight controller PCB and the PoE supply.',
+      'The control design puts PID loops for stabilization under a neural network, trained in simulation, that decides where the drone should be. It will hold its distance from the glass by ultrasonic, and its height and position by GPS and barometer, while correcting for wind and the pull of the hose.',
+      'For the demo we are building a scaled-down prototype: a quad on 120 V wall power, with carbon fibre arms through a 3D-printed body.',
     ],
     hardware: [
       { area: 'Airframe', item: 'Quadcopter, 2:1 thrust-to-weight' },
@@ -231,7 +233,8 @@ export const projects: Project[] = [
       { area: 'Modelling', item: 'MATLAB and Simscape' },
       { area: 'CAD', item: 'SolidWorks' },
     ],
-    results: ['Prototype due January 2027, with a live demo at Design Day in March 2027.'],
+    results: ['In design now. The prototype is due in January 2027, with a live demo at Design Day in March 2027.'],
+    resultsHeading: 'Status',
     // TODO: add real numbers as the build progresses, such as flight time, thrust margin or hold accuracy.
     metrics: [],
     diagram: {
@@ -254,7 +257,7 @@ export const projects: Project[] = [
         type: 'image',
         src: 'projects/tethered-drone/render.jpg',
         alt: 'Render of the gold quadcopter beside a glass office tower, spraying a fan of water at a dirty window and leaving a clean stripe behind it, with its tether and hose running down to the ground',
-        caption: 'Concept render of the full-size drone at work',
+        caption: 'Concept render of how the full-size drone will work',
         ratio: '16/9',
       },
       { type: 'image', src: '', alt: 'The ESP32 flight controller PCB', caption: 'Flight controller PCB', ratio: '3/2' },
@@ -269,7 +272,7 @@ export const projects: Project[] = [
         frames: 120,
         scroll: 320,
         heading: 'ON THE GLASS',
-        intro: 'The full-size drone at work, about ten storeys up. Scroll to clean the glass.',
+        intro: 'How the full-size drone will work, about ten storeys up. Scroll to clean the glass.',
         alt: 'Render of the gold quadcopter beside a glass office tower, spraying a window and leaving a clean, wet stripe behind it',
         note: 'Concept render made in Blender. The full-size airframe is still being designed, so its shape and sizes are illustrative.',
         steps: [
@@ -285,7 +288,7 @@ export const projects: Project[] = [
         frames: 132,
         scroll: 380,
         heading: 'PROTOTYPE',
-        intro: 'The scaled-down demo build. Scroll to take it apart.',
+        intro: 'The scaled-down demo build we are designing now. Scroll to take it apart.',
         alt: 'Exploded render of the prototype quadcopter: props and motors above the four carbon fibre arm tubes, and the gold printed body with its lid, flight controller, ESC board and sensors lifted out above it and the tether hub, nozzle and legs below',
         note: 'Concept render made in Blender. The prototype is still being designed, so its parts and sizes are illustrative.',
         steps: [
