@@ -2,8 +2,6 @@ import { drawTrace, gsap, prefersReducedMotion, ScrollTrigger, SplitText, whenId
 import { collectNets, routeFan, routeNets } from './net';
 import { initRail } from './rail';
 
-const DESKTOP = '(min-width: 1024px)';
-
 /**
  * Brings up the WebGL board once the name has finished routing, then crossfades from the SVG.
  * Waiting keeps the entrance smooth: nothing heavy runs while the letters draw.
@@ -75,8 +73,8 @@ export function initHome(onSettled: () => void) {
 
   /* Everything scroll-driven. matchMedia reverts it all when the breakpoint or preference changes. */
   const mm = gsap.matchMedia();
-  mm.add({ desktop: DESKTOP, mobile: '(max-width: 1023px)', motion: '(prefers-reduced-motion: no-preference)' }, (context) => {
-    const { desktop, motion } = context.conditions as { desktop: boolean; mobile: boolean; motion: boolean };
+  mm.add({ motion: '(prefers-reduced-motion: no-preference)' }, (context) => {
+    const { motion } = context.conditions as { motion: boolean };
     if (!motion) {
       onSettled();
       return;
@@ -86,7 +84,7 @@ export function initHome(onSettled: () => void) {
     const queue = [
       () => {
         gsap.to(hero.querySelector('.board-canvas'), { yPercent: 14, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
-        return about(desktop);
+        return about();
       },
       work,
       toolboxSection,
@@ -110,7 +108,8 @@ export function initHome(onSettled: () => void) {
     return () => clearTimeout(timer);
   });
 
-  function about(desktop: boolean) {
+  /* About plays through once as it arrives, rather than holding the page while it is scrolled through. */
+  function about() {
     const section = document.querySelector<HTMLElement>('#about');
     if (!section) return;
     const statement = section.querySelector<HTMLElement>('[data-lit]')!;
@@ -119,16 +118,11 @@ export function initHome(onSettled: () => void) {
     const title = section.querySelector('.about-title')!;
     const side = section.querySelector('.about-side')!;
 
-    const tl = gsap.timeline({
-      defaults: { ease: 'none' },
-      scrollTrigger: desktop
-        ? { trigger: section, pin: true, start: 'top top', end: '+=140%', scrub: true }
-        : { trigger: section, start: 'top 75%', end: 'bottom 70%', scrub: true },
-    });
-    if (net) tl.fromTo(net, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1 }, 0);
-    tl.add(drawTrace(title, 0.5).timeScale(1.6), desktop ? 0.25 : 0);
-    tl.fromTo(split.words, { opacity: 0.16 }, { opacity: 1, duration: 0.1, stagger: 0.02 }, 0.35);
-    tl.from(side.children, { autoAlpha: 0, y: 28, duration: 0.3, stagger: 0.12, ease: 'power2.out' }, 0.5);
+    const tl = gsap.timeline({ scrollTrigger: { trigger: section, start: 'top 70%', toggleActions: 'play none none none' } });
+    if (net) tl.fromTo(net, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 0);
+    tl.add(drawTrace(title, 0.7), 0.1);
+    tl.fromTo(split.words, { opacity: 0.16 }, { opacity: 1, duration: 0.4, stagger: 0.012, ease: 'power1.out' }, 0.25);
+    tl.from(side.children, { autoAlpha: 0, y: 28, duration: 0.7, stagger: 0.1, ease: 'power2.out' }, 0.4);
     return () => split.revert();
   }
 

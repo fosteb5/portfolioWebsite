@@ -170,7 +170,7 @@ export const about = {
     { label: 'Studying', value: 'BESc, Electrical & Computer Engineering and AI Systems Engineering (dual degree), Western University' },
     { label: 'Graduating', value: 'April 2027' },
     { label: 'Looking for', value: 'Full-time engineering roles from Spring 2027, in the GTA or near Bobcaygeon' },
-    { label: 'Based in', value: 'Bobcaygeon, ON, and London, ON during the school year' },
+    { label: 'Based in', value: 'Bobcaygeon, ON, and London, ON for school' },
   ],
   // TODO: add a portrait to src/assets/projects/about/ and set src, for example 'projects/about/portrait.jpg'.
   portrait: {
